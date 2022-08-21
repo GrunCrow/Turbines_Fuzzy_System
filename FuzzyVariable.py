@@ -1,6 +1,11 @@
 import numpy as np
 from skfuzzy import control
 
+'''Definición de las variables lo cual incluye:
+    - Dominio de cada variable (val min y max posibles y paso entre valores)
+    - Declaración de los inputs (Antecedentes) y outputs (Consecuente) para la libreria skfuzzy
+'''
+
 dominio_salinidad = np.arange(20, 50)  # en gramos por litros
 dominio_temperatura = np.arange(-20, 50, 0.1).round(1)  # en grados celsius
 dominio_corrientes = np.arange(0, 300)  # en cm por segundo

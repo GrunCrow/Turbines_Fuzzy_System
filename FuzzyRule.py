@@ -1,148 +1,239 @@
-# execution methods for a FuzzyClause that contains a FuzzyVariable; _variable and a FuzzySet; _set
-from membership_functions import salinidad, temperatura, corrientes, altura_laminal, viscodidad, densidad,\
-    profundidad, profundidad_colocacion, turbinas
 from skfuzzy import control
+from membership_functions import salinidad, temperatura, corrientes, altura_laminal, viscodidad, densidad, profundidad, \
+    profundidad_colocacion, turbinas
 
+'''
+Declaración de las reglas lógicas para el sistema
+'''
 
-#   optima -> todo verde
-r1 = control.Rule((salinidad['Alta'] or salinidad['Media'] or salinidad['Baja']) and temperatura['Media']
-                  and (corrientes['Muy Alta'] or corrientes['Alta']) and (altura_laminal['Muy Alta'] or altura_laminal['Alta'])
-                  and (viscodidad['Alta'] or viscodidad['Media']) and (densidad['Alta'] or densidad['Media'])
-                  and (profundidad['Alta'] or profundidad['Media']) and (profundidad_colocacion['Alta'] or profundidad_colocacion['Media']),
-                  turbinas['Optima'])
+#                                                 TURBINA OPTIMA
+# optima -> tod verde
+r_optima = control.Rule(salinidad['Media'] & temperatura['Media'] & corrientes['Alta'] & altura_laminal['Alta']
+                        & viscodidad['Media'] & densidad['Media'] & profundidad['Media']
+                        & profundidad_colocacion['Media'],
+                        turbinas['Optima'])
 
-#   descartada por (al menos 1) rojo
-r2 = control.Rule((salinidad['Muy Alta'] or salinidad['Muy Baja']) or (temperatura['Muy Alta'] or temperatura['Muy Baja'])
-                  or corrientes['Muy Baja'] or altura_laminal['Muy Baja'] or viscodidad['Muy Alta']
-                  or (densidad['Muy Alta'] or densidad['Muy Baja']) or (profundidad['Muy Alta'] or profundidad['Muy Baja'])
-                  or (profundidad_colocacion['Muy Alta'] or profundidad_colocacion['Muy Baja']),
-                  turbinas['Descartada'])
+#                                                   TURBINA MUY BUENA
+# muy buena -> 1 amarillo
+r_muy_buena = control.Rule(salinidad['Media'] & profundidad_colocacion['Media']
+                           & ((temperatura['Media'] & corrientes['Alta'] & altura_laminal['Alta'] & viscodidad['Media'] & densidad['Media'] & profundidad['Baja'])
+                              | (temperatura['Media'] & corrientes['Alta'] & altura_laminal['Alta'] & viscodidad['Media'] & densidad['Baja'] & profundidad['Media'])
+                              | (temperatura['Media'] & corrientes['Alta'] & altura_laminal['Alta'] & viscodidad['Baja'] & densidad['Media'] & profundidad['Media'])
+                              | (temperatura['Media'] & corrientes['Alta'] & altura_laminal['Media'] & viscodidad['Media'] & densidad['Media'] & profundidad['Media'])
+                              | (temperatura['Media'] & corrientes['Media'] & altura_laminal['Alta'] & viscodidad['Media'] & densidad['Media'] & profundidad['Media'])
+                              | ((temperatura['Alta'] | temperatura['Baja']) & corrientes['Alta'] & altura_laminal['Alta'] & viscodidad['Media'] & densidad['Media'] & profundidad['Media'])),
+                           turbinas['Muy Buena'])
+
+#                                                   TURBINA BUENA
+# buena -> 2 amarillos
+r_buena = control.Rule(salinidad['Media'] & profundidad_colocacion['Media']
+                       & (((temperatura['Alta'] | temperatura['Baja']) & corrientes['Media'] & altura_laminal['Alta'] & viscodidad['Media'] & densidad['Media'] & profundidad['Media'])
+                          | ((temperatura['Alta'] | temperatura['Baja']) & corrientes['Alta'] & altura_laminal['Media'] & viscodidad['Media'] & densidad['Media'] & profundidad['Media'])
+                          | ((temperatura['Alta'] | temperatura['Baja']) & corrientes['Alta'] & altura_laminal['Alta'] & viscodidad['Baja'] & densidad['Media'] & profundidad['Media'])
+                          | ((temperatura['Alta'] | temperatura['Baja']) & corrientes['Alta'] & altura_laminal['Alta'] & viscodidad['Media'] & densidad['Baja'] & profundidad['Media'])
+                          | ((temperatura['Alta'] | temperatura['Baja']) & corrientes['Alta'] & altura_laminal['Alta'] & viscodidad['Media'] & densidad['Media'] & profundidad['Baja'])
+                          | (temperatura['Media'] & corrientes['Media'] & altura_laminal['Media'] & viscodidad['Media'] & densidad['Media'] & profundidad['Media'])
+                          | (temperatura['Media'] & corrientes['Media'] & altura_laminal['Alta'] & viscodidad['Baja'] & densidad['Media'] & profundidad['Media'])
+                          | (temperatura['Media'] & corrientes['Media'] & altura_laminal['Alta'] & viscodidad['Media'] & densidad['Baja'] & profundidad['Media'])
+                          | (temperatura['Media'] & corrientes['Media'] & altura_laminal['Alta'] & viscodidad['Media'] & densidad['Media'] & profundidad['Baja'])
+                          | (temperatura['Media'] & corrientes['Alta'] & altura_laminal['Media'] & viscodidad['Baja'] & densidad['Media'] & profundidad['Media'])
+                          | (temperatura['Media'] & corrientes['Alta'] & altura_laminal['Media'] & viscodidad['Media'] & densidad['Baja'] & profundidad['Media'])
+                          | (temperatura['Media'] & corrientes['Alta'] & altura_laminal['Media'] & viscodidad['Media'] & densidad['Media'] & profundidad['Baja'])
+                          | (temperatura['Media'] & corrientes['Alta'] & altura_laminal['Alta'] & viscodidad['Baja'] & densidad['Baja'] & profundidad['Media'])
+                          | (temperatura['Media'] & corrientes['Alta'] & altura_laminal['Alta'] & viscodidad['Baja'] & densidad['Media'] & profundidad['Baja'])
+                          | (temperatura['Media'] & corrientes['Alta'] & altura_laminal['Alta'] & viscodidad['Media'] & densidad['Baja'] & profundidad['Baja'])),
+                       turbinas['Buena'])
+
+#                                                   TURBINA NO RECOMENDABLE
+# no recomendable por 1 naranja
+r_no_recomendable_naranja = control.Rule((salinidad['Media']
+                                          # solo 1 naranja
+                                          & ((temperatura['Media'] & densidad['Media'] & profundidad['Media']
+                                              & ((corrientes['Baja'] & altura_laminal['Alta'] & viscodidad['Media'] & profundidad_colocacion['Media'])
+                                                 | (corrientes['Alta'] & altura_laminal['Baja'] & viscodidad['Media'] & profundidad_colocacion['Media'])
+                                                 | (corrientes['Alta'] & altura_laminal['Alta'] & viscodidad['Muy Baja'] & profundidad_colocacion['Media'])
+                                                 | (corrientes['Alta'] & altura_laminal['Alta'] & viscodidad['Media'] & profundidad_colocacion['Baja'])))
+                                             #  1 naranja + 1 amarillo
+                                             | ((temperatura['Alta'] | temperatura['Baja']) & densidad['Media'] & profundidad['Media']    # temp amarillo
+                                                & ((corrientes['Baja'] & altura_laminal['Alta'] & viscodidad['Media'] & profundidad_colocacion['Media'])   # corrientes nar
+                                                   | (corrientes['Alta'] & altura_laminal['Baja'] & viscodidad['Media'] & profundidad_colocacion['Media'])     # alt_laminal nar
+                                                   | (corrientes['Alta'] & altura_laminal['Alta'] & viscodidad['Muy Baja'] & profundidad_colocacion['Media'])  # viscosidad nar
+                                                   | (corrientes['Alta'] & altura_laminal['Alta'] & viscodidad['Media'] & profundidad_colocacion['Baja'])))    # prof_coloc nar
+                                             | (temperatura['Media'] & densidad['Baja'] & profundidad['Media']  # densidad amarillo
+                                                & ((corrientes['Baja'] & altura_laminal['Alta'] & viscodidad['Media'] & profundidad_colocacion['Media'])    # corrientes nar
+                                                    | (corrientes['Alta'] & altura_laminal['Baja'] & viscodidad['Media'] & profundidad_colocacion['Media'])      # alt_laminal nar
+                                                    | (corrientes['Alta'] & altura_laminal['Alta'] & viscodidad['Muy Baja'] & profundidad_colocacion['Media'])   # viscosidad nar
+                                                    | (corrientes['Alta'] & altura_laminal['Alta'] & viscodidad['Media'] & profundidad_colocacion['Baja'])))     # prof_coloc nar
+                                             | (temperatura['Media'] & densidad['Media'] & profundidad['Baja']     # profundidad amarillo
+                                                & ((corrientes['Baja'] & altura_laminal['Alta'] & viscodidad['Media'] & profundidad_colocacion['Media'])   # corrientes nar
+                                                    | (corrientes['Alta'] & altura_laminal['Baja'] & viscodidad['Media'] & profundidad_colocacion['Media'])     # alt_laminal nar
+                                                    | (corrientes['Alta'] & altura_laminal['Alta'] & viscodidad['Muy Baja'] & profundidad_colocacion['Media'])  # viscosidad nar
+                                                    | (corrientes['Alta'] & altura_laminal['Alta'] & viscodidad['Media'] & profundidad_colocacion['Baja'])))    # prof_coloc nar
+                                             | (temperatura['Media'] & densidad['Media'] & profundidad['Media'] & corrientes['Media']     # corrientes amarillo
+                                                & ((altura_laminal['Baja'] & viscodidad['Media'] & profundidad_colocacion['Media'])   # alt_laminal nar
+                                                    | (altura_laminal['Alta'] & viscodidad['Muy Baja'] & profundidad_colocacion['Media'])  # viscosidad nar
+                                                    | (altura_laminal['Alta'] & viscodidad['Media'] & profundidad_colocacion['Baja'])))    # prof_coloc nar
+                                             | (temperatura['Media'] & densidad['Media'] & profundidad['Media'] & altura_laminal['Media']    # alt_laminal amarillo
+                                                & ((corrientes['Baja'] & viscodidad['Media'] & profundidad_colocacion['Media'])   # corrientes nar
+                                                    | (corrientes['Alta'] & viscodidad['Muy Baja'] & profundidad_colocacion['Media'])  # viscosidad nar
+                                                    | (corrientes['Alta'] & viscodidad['Media'] & profundidad_colocacion['Baja'])))    # prof_coloc nar
+                                             | (temperatura['Media'] & densidad['Media'] & profundidad['Media'] & viscodidad['Baja']  # viscosidad amarillo
+                                                & ((corrientes['Baja'] & altura_laminal['Alta'] & profundidad_colocacion['Media'])   # corrientes nar
+                                                    | (corrientes['Alta'] & altura_laminal['Baja'] & profundidad_colocacion['Media'])     # alt_laminal nar
+                                                    | (corrientes['Alta'] & altura_laminal['Alta'] & profundidad_colocacion['Baja']))))   # prof_coloc nar
+                                          # 1 naranja + 2 amarillos
+                                          | (((temperatura['Alta'] | temperatura['Baja']) & densidad['Baja'] & profundidad['Media']  # temperatura y densidad amarillo
+                                              & ((corrientes['Baja'] & altura_laminal['Alta'] & viscodidad['Media'] & profundidad_colocacion['Media'])    # corrientes nar
+                                                 | (corrientes['Alta'] & altura_laminal['Baja'] & viscodidad['Media'] & profundidad_colocacion['Media'])      # alt_laminal nar
+                                                 | (corrientes['Alta'] & altura_laminal['Alta'] & viscodidad['Muy Baja'] & profundidad_colocacion['Media'])   # viscosidad nar
+                                                 | (corrientes['Alta'] & altura_laminal['Alta'] & viscodidad['Media'] & profundidad_colocacion['Baja'])))     # prof_coloc nar
+                                             | ((temperatura['Alta'] | temperatura['Baja']) & densidad['Media'] & profundidad['Baja']  # temperatura y prof amarillo
+                                                & ((corrientes['Baja'] & altura_laminal['Alta'] & viscodidad['Media'] & profundidad_colocacion['Media'])    # corrientes nar
+                                                    | (corrientes['Alta'] & altura_laminal['Baja'] & viscodidad['Media'] & profundidad_colocacion['Media'])      # alt_laminal nar
+                                                    | (corrientes['Alta'] & altura_laminal['Alta'] & viscodidad['Muy Baja'] & profundidad_colocacion['Media'])   # viscosidad nar
+                                                    | (corrientes['Alta'] & altura_laminal['Alta'] & viscodidad['Media'] & profundidad_colocacion['Baja'])))     # prof_coloc nar
+                                             | ((temperatura['Alta'] | temperatura['Baja']) & densidad['Media'] & profundidad['Media'] & corrientes['Media']  # temperatura y corrientes amarillo
+                                                & ((altura_laminal['Baja'] & viscodidad['Media'] & profundidad_colocacion['Media'])      # alt_laminal nar
+                                                    | (altura_laminal['Alta'] & viscodidad['Muy Baja'] & profundidad_colocacion['Media'])   # viscosidad nar
+                                                    | (altura_laminal['Alta'] & viscodidad['Media'] & profundidad_colocacion['Baja'])))     # prof_coloc nar
+                                             | ((temperatura['Alta'] | temperatura['Baja']) & densidad['Media'] & profundidad['Baja'] & altura_laminal['Media']  # temperatura y alt laminal amarillo
+                                                & ((corrientes['Baja'] & viscodidad['Media'] & profundidad_colocacion['Media'])    # corrientes nar
+                                                    | (corrientes['Alta'] & viscodidad['Muy Baja'] & profundidad_colocacion['Media'])   # viscosidad nar
+                                                    | (corrientes['Alta'] & viscodidad['Media'] & profundidad_colocacion['Baja'])))     # prof_coloc nar
+                                             | ((temperatura['Alta'] | temperatura['Baja']) & densidad['Baja'] & profundidad['Media'] & viscodidad['Baja']  # temperatura y viscosidad amarillo
+                                                & ((corrientes['Baja'] & altura_laminal['Alta'] & profundidad_colocacion['Media'])    # corrientes nar
+                                                    | (corrientes['Alta'] & altura_laminal['Baja'] & profundidad_colocacion['Media'])      # alt_laminal nar
+                                                    | (corrientes['Alta'] & altura_laminal['Alta'] & profundidad_colocacion['Baja'])))     # prof_coloc nar
+
+                                             | (temperatura['Media'] & densidad['Baja'] & profundidad['Baja']  # densidad  y profundidad amarillo
+                                                & ((corrientes['Baja'] & altura_laminal['Alta'] & viscodidad['Media'] & profundidad_colocacion['Media'])    # corrientes nar
+                                                    | (corrientes['Alta'] & altura_laminal['Baja'] & viscodidad['Media'] & profundidad_colocacion['Media'])      # alt_laminal nar
+                                                    | (corrientes['Alta'] & altura_laminal['Alta'] & viscodidad['Muy Baja'] & profundidad_colocacion['Media'])   # viscosidad nar
+                                                    | (corrientes['Alta'] & altura_laminal['Alta'] & viscodidad['Media'] & profundidad_colocacion['Baja'])))     # prof_coloc nar
+                                             | (temperatura['Media'] & densidad['Baja'] & profundidad['Media'] & corrientes['Media']  # densidad y corrientes amarillo
+                                                & ((altura_laminal['Baja'] & viscodidad['Media'] & profundidad_colocacion['Media'])      # alt_laminal nar
+                                                    | (altura_laminal['Alta'] & viscodidad['Muy Baja'] & profundidad_colocacion['Media'])   # viscosidad nar
+                                                    | (altura_laminal['Alta'] & viscodidad['Media'] & profundidad_colocacion['Baja'])))     # prof_coloc nar
+                                             | (temperatura['Media'] & densidad['Baja'] & profundidad['Baja'] & altura_laminal['Media']  # densidad y alt laminal amarillo
+                                                & ((corrientes['Baja'] & viscodidad['Media'] & profundidad_colocacion['Media'])    # corrientes nar
+                                                    | (corrientes['Alta'] & viscodidad['Muy Baja'] & profundidad_colocacion['Media'])   # viscosidad nar
+                                                    | (corrientes['Alta'] & viscodidad['Media'] & profundidad_colocacion['Baja'])))     # prof_coloc nar
+                                             | (temperatura['Media'] & densidad['Baja'] & profundidad['Media'] & viscodidad['Baja']  # densidad y viscosidad amarillo
+                                                & ((corrientes['Baja'] & altura_laminal['Alta'] & profundidad_colocacion['Media'])    # corrientes nar
+                                                    | (corrientes['Alta'] & altura_laminal['Baja'] & profundidad_colocacion['Media'])      # alt_laminal nar
+                                                    | (corrientes['Alta'] & altura_laminal['Alta'] & profundidad_colocacion['Baja'])))     # prof_coloc nar
+
+                                             | (temperatura['Media'] & densidad['Media'] & profundidad['Baja'] & corrientes['Media']  # profundidad y corrientes amarillo
+                                                & ((altura_laminal['Baja'] & viscodidad['Media'] & profundidad_colocacion['Media'])      # alt_laminal nar
+                                                    | (altura_laminal['Alta'] & viscodidad['Muy Baja'] & profundidad_colocacion['Media'])   # viscosidad nar
+                                                    | (altura_laminal['Alta'] & viscodidad['Media'] & profundidad_colocacion['Baja'])))     # prof_coloc nar
+                                             | (temperatura['Media'] & densidad['Media'] & profundidad['Baja'] & altura_laminal['Media']  # profundidad y alt laminal amarillo
+                                                & ((corrientes['Baja'] & viscodidad['Media'] & profundidad_colocacion['Media'])    # corrientes nar
+                                                    | (corrientes['Alta'] & viscodidad['Muy Baja'] & profundidad_colocacion['Media'])   # viscosidad nar
+                                                    | (corrientes['Alta'] & viscodidad['Media'] & profundidad_colocacion['Baja'])))     # prof_coloc nar
+                                             | (temperatura['Media'] & densidad['Media'] & profundidad['Baja'] & viscodidad['Baja']  # profundidad y viscosidad amarillo
+                                                & ((corrientes['Baja'] & altura_laminal['Alta'] & profundidad_colocacion['Media'])    # corrientes nar
+                                                    | (corrientes['Alta'] & altura_laminal['Baja'] & profundidad_colocacion['Media'])      # alt_laminal nar
+                                                    | (corrientes['Alta'] & altura_laminal['Alta'] & profundidad_colocacion['Baja'])))     # prof_coloc nar
+
+                                             | (temperatura['Media'] & densidad['Media'] & profundidad['Media'] & corrientes['Media'] & altura_laminal['Media']  # corrientes y alt laminal amarillo
+                                                & ((altura_laminal['Alta'] & viscodidad['Muy Baja'] & profundidad_colocacion['Media'])   # viscosidad nar
+                                                    | (altura_laminal['Alta'] & viscodidad['Media'] & profundidad_colocacion['Baja'])))     # prof_coloc nar
+                                             | (temperatura['Media'] & densidad['Media'] & profundidad['Baja'] & corrientes['Media'] & viscodidad['Baja']   # corrientes y viscosidad amarillo
+                                                & ((corrientes['Alta'] & altura_laminal['Baja'] & profundidad_colocacion['Media'])      # alt_laminal nar
+                                                    | (corrientes['Alta'] & altura_laminal['Alta'] & profundidad_colocacion['Baja'])))     # prof_coloc nar
+
+                                             | (temperatura['Media'] & densidad['Media'] & profundidad['Media'] & altura_laminal['Media'] & viscodidad['Baja']  # alt laminal y viscosidad amarillo
+                                                & ((corrientes['Baja'] & profundidad_colocacion['Media'])   # corrientes nar
+                                                    | (corrientes['Alta'] & profundidad_colocacion['Baja']))))),    # prof_coloc nar
+                                         turbinas['No Recomendable'])
+
+# no algun rojo
+# no algun naranja
+# no tod naranja
+# -> 3 am + or del resto
+# no recomendable por 3 amarillos
+r_no_recomendable_amarillos = control.Rule((~((salinidad['Alta'] | salinidad['Baja'])   # ningun rojo
+                                            | (temperatura['Muy Alta'] | temperatura['Muy Baja'])
+                                            | corrientes['Muy Baja']
+                                            | altura_laminal['Muy Baja']
+                                            | viscodidad['Alta']
+                                            | (densidad['Alta'] | densidad['Muy Baja'])
+                                            | (profundidad['Alta'] | profundidad['Muy Baja'])
+                                            | (profundidad_colocacion['Alta'] | profundidad_colocacion['Muy Baja'])) &
+                                            ~(corrientes['Baja'] | altura_laminal['Baja'] | viscodidad['Muy Baja'] |    # no algun naranja
+                                              profundidad_colocacion['Baja']) &  # and no tod naranj
+                                            ~(((temperatura['Alta'] | temperatura['Baja']) & corrientes['Media'] &      # no tod amarillo
+                                               altura_laminal['Media'] & viscodidad['Baja'] & densidad['Baja'] &
+                                               profundidad['Baja']))) &
+                                           (((temperatura['Alta'] | temperatura['Baja']) & corrientes['Media'] &        # min 3 amarillos
+                                             altura_laminal['Media'] | viscodidad['Baja'] | densidad['Baja'] |
+                                             profundidad['Baja'])
+                                            | ((temperatura['Alta'] | temperatura['Baja']) & corrientes['Media'] |
+                                               altura_laminal['Media'] & viscodidad['Baja'] | densidad['Baja'] |
+                                               profundidad['Baja'])
+                                            | ((temperatura['Alta'] | temperatura['Baja']) & corrientes['Media'] |
+                                               altura_laminal['Media'] | viscodidad['Baja'] & densidad['Baja'] |
+                                               profundidad['Baja'])
+                                            | ((temperatura['Alta'] | temperatura['Baja']) & corrientes['Media'] |
+                                               altura_laminal['Media'] | viscodidad['Baja'] | densidad['Baja'] &
+                                               profundidad['Baja'])
+                                            | ((temperatura['Alta'] | temperatura['Baja']) | corrientes['Media'] &
+                                               altura_laminal['Media'] & viscodidad['Baja'] | densidad['Baja'] |
+                                               profundidad['Baja'])
+                                            | ((temperatura['Alta'] | temperatura['Baja']) | corrientes['Media'] &
+                                               altura_laminal['Media'] | viscodidad['Baja'] & densidad['Baja'] |
+                                               profundidad['Baja'])
+                                            | ((temperatura['Alta'] | temperatura['Baja']) | corrientes['Media'] &
+                                               altura_laminal['Media'] | viscodidad['Baja'] | densidad['Baja'] &
+                                               profundidad['Baja'])
+                                            | ((temperatura['Alta'] | temperatura['Baja']) | corrientes['Media'] |
+                                               altura_laminal['Media'] & viscodidad['Baja'] & densidad['Baja'] |
+                                               profundidad['Baja'])
+                                            | ((temperatura['Alta'] | temperatura['Baja']) | corrientes['Media'] |
+                                               altura_laminal['Media'] & viscodidad['Baja'] | densidad['Baja'] &
+                                               profundidad['Baja'])
+                                            | ((temperatura['Alta'] | temperatura['Baja']) | corrientes['Media'] |
+                                               altura_laminal['Media'] | viscodidad['Baja'] & densidad['Baja'] &
+                                               profundidad['Baja'])),
+                                           turbinas['No Recomendable'])
+
+#                                                   TURBINA DESCARTADA
+# descartada por (al menos 1) rojo
+r_descartada_rojo = control.Rule((salinidad['Alta'] | salinidad['Baja'])
+                                 | (temperatura['Muy Alta'] | temperatura['Muy Baja'])
+                                 | corrientes['Muy Baja']
+                                 | altura_laminal['Muy Baja']
+                                 | viscodidad['Alta']
+                                 | (densidad['Alta'] | densidad['Muy Baja'])
+                                 | (profundidad['Alta'] | profundidad['Muy Baja'])
+                                 | (profundidad_colocacion['Alta'] | profundidad_colocacion['Muy Baja']),
+                                 turbinas['Descartada'])
 
 #   descartada por (al menos 2) naranjas
-r3 = control.Rule((corrientes['Baja'] and altura_laminal['Baja'] and viscodidad['Muy Baja'] and profundidad_colocacion['Baja']) or
-                  (corrientes['Baja'] and altura_laminal['Baja'] or viscodidad['Muy Baja'] or profundidad_colocacion['Baja']) or
-                  (corrientes['Baja'] or altura_laminal['Baja'] or viscodidad['Muy Baja'] and profundidad_colocacion['Baja']) or
-                  (corrientes['Baja'] or altura_laminal['Baja'] and viscodidad['Muy Baja'] or profundidad_colocacion['Baja']),
-                  turbinas['Descartada'])
+r_descartada_naranjas = control.Rule(((corrientes['Baja'] & altura_laminal['Baja']) | (corrientes['Baja'] & viscodidad['Muy Baja']) |
+                                      (corrientes['Baja'] & profundidad_colocacion['Baja']) |
+                                      (altura_laminal['Baja'] & viscodidad['Muy Baja']) |
+                                      (altura_laminal['Baja'] & profundidad_colocacion['Baja']) |
+                                      (viscodidad['Muy Baja'] & profundidad_colocacion['Baja'])),
+                                     turbinas['Descartada'])
 
-#   no recomendable por 1 naranja
-r4 = control.Rule((corrientes['Baja'] and ~altura_laminal['Baja'] and ~viscodidad['Muy Baja'] and ~profundidad_colocacion['Baja']) or
-                  (~corrientes['Baja'] and altura_laminal['Baja'] and ~viscodidad['Muy Baja'] and ~profundidad_colocacion['Baja']) or
-                  (~corrientes['Baja'] and ~altura_laminal['Baja'] and viscodidad['Muy Baja'] and ~profundidad_colocacion['Baja']) or
-                  (~corrientes['Baja'] and ~altura_laminal['Baja'] and ~viscodidad['Muy Baja'] and profundidad_colocacion['Baja']) and
-                  (~salinidad['Muy Baja'] and ~salinidad['Muy Alta'] and ~temperatura['Muy Baja'] and ~temperatura['Muy Alta'] and
-                   ~densidad['Muy Baja'] and ~densidad['Muy Alta'] and ~profundidad['Muy Baja'] and ~profundidad['Muy Alta']),
-                  turbinas['No Recomendable'])
+r_descartada_naranja_amarillos = control.Rule(((corrientes['Baja'] | altura_laminal['Baja'] | viscodidad['Muy Baja'] | profundidad_colocacion['Baja']) &    # al menos un naranja
+                                               (salinidad['Media'] &
+                                                # al menos 3 amarillos
+                                                (((temperatura['Alta'] | temperatura['Baja']) & corrientes['Media'] & altura_laminal['Media'] | viscodidad['Baja'] | densidad['Baja'] | profundidad['Baja'])
+                                                 | ((temperatura['Alta'] | temperatura['Baja']) & corrientes['Media'] | altura_laminal['Media'] & viscodidad['Baja'] | densidad['Baja'] | profundidad['Baja'])
+                                                 | ((temperatura['Alta'] | temperatura['Baja']) & corrientes['Media'] | altura_laminal['Media'] | viscodidad['Baja'] & densidad['Baja'] | profundidad['Baja'])
+                                                 | ((temperatura['Alta'] | temperatura['Baja']) & corrientes['Media'] | altura_laminal['Media'] | viscodidad['Baja'] | densidad['Baja'] & profundidad['Baja'])
+                                                 | ((temperatura['Alta'] | temperatura['Baja']) | corrientes['Media'] & altura_laminal['Media'] & viscodidad['Baja'] | densidad['Baja'] | profundidad['Baja'])
+                                                 | ((temperatura['Alta'] | temperatura['Baja']) | corrientes['Media'] & altura_laminal['Media'] | viscodidad['Baja'] & densidad['Baja'] | profundidad['Baja'])
+                                                 | ((temperatura['Alta'] | temperatura['Baja']) | corrientes['Media'] & altura_laminal['Media'] | viscodidad['Baja'] | densidad['Baja'] & profundidad['Baja'])
+                                                 | ((temperatura['Alta'] | temperatura['Baja']) | corrientes['Media'] | altura_laminal['Media'] & viscodidad['Baja'] & densidad['Baja'] | profundidad['Baja'])
+                                                 | ((temperatura['Alta'] | temperatura['Baja']) | corrientes['Media'] | altura_laminal['Media'] & viscodidad['Baja'] | densidad['Baja'] & profundidad['Baja'])
+                                                 | ((temperatura['Alta'] | temperatura['Baja']) | corrientes['Media'] | altura_laminal['Media'] | viscodidad['Baja'] & densidad['Baja'] & profundidad['Baja'])))),
+                                              turbinas['Descartada'])
 
-#   no recomendable por 3 amarillos
-r5 = control.Rule(((temperatura['Alta'] or temperatura['Baja']) and corrientes['Media'] and altura_laminal['Media'] or
-                  viscodidad['Baja'] or densidad['Baja'] or profundidad['Baja']) or
-                  ((temperatura['Alta'] or temperatura['Baja']) and corrientes['Media'] or altura_laminal['Media'] and
-                  viscodidad['Baja'] or densidad['Baja'] or profundidad['Baja']) or
-                  ((temperatura['Alta'] or temperatura['Baja']) and corrientes['Media'] or altura_laminal['Media'] or
-                  viscodidad['Baja'] and densidad['Baja'] or profundidad['Baja']) or
-                  ((temperatura['Alta'] or temperatura['Baja']) and corrientes['Media'] or altura_laminal['Media'] or
-                  viscodidad['Baja'] or densidad['Baja'] and profundidad['Baja']) or
-                  ((temperatura['Alta'] or temperatura['Baja']) or corrientes['Media'] and altura_laminal['Media'] and
-                  viscodidad['Baja'] or densidad['Baja'] or profundidad['Baja']) or
-                  ((temperatura['Alta'] or temperatura['Baja']) or corrientes['Media'] and altura_laminal['Media'] or
-                  viscodidad['Baja'] and densidad['Baja'] or profundidad['Baja']) or
-                  ((temperatura['Alta'] or temperatura['Baja']) or corrientes['Media'] and altura_laminal['Media'] or
-                  viscodidad['Baja'] or densidad['Baja'] and profundidad['Baja']) or
-                  ((temperatura['Alta'] or temperatura['Baja']) or corrientes['Media'] or altura_laminal['Media'] and
-                  viscodidad['Baja'] and densidad['Baja'] or profundidad['Baja']) or
-                  ((temperatura['Alta'] or temperatura['Baja']) or corrientes['Media'] or altura_laminal['Media'] and
-                  viscodidad['Baja'] or densidad['Baja'] and profundidad['Baja']) or
-                  ((temperatura['Alta'] or temperatura['Baja']) or corrientes['Media'] or altura_laminal['Media'] or
-                  viscodidad['Baja'] and densidad['Baja'] and profundidad['Baja']),
-                  turbinas['Descartada'])
-
-#   buena por 2 amarillos
-r6 = control.Rule(((temperatura['Alta'] or temperatura['Baja']) and corrientes['Media'] and ~altura_laminal['Media']
-                   and ~viscodidad['Baja'] and ~densidad['Baja'] and ~profundidad['Baja']) or
-                  ((temperatura['Alta'] or temperatura['Baja']) and ~corrientes['Media'] and altura_laminal['Media']
-                   and ~viscodidad['Baja'] and ~densidad['Baja'] and ~profundidad['Baja']) or
-                  ((temperatura['Alta'] or temperatura['Baja']) and ~corrientes['Media'] and ~altura_laminal['Media']
-                   and viscodidad['Baja'] and ~densidad['Baja'] and ~profundidad['Baja']) or
-                  ((temperatura['Alta'] or temperatura['Baja']) and ~corrientes['Media'] and ~altura_laminal['Media']
-                   and ~viscodidad['Baja'] and densidad['Baja'] and ~profundidad['Baja']) or
-                  ((temperatura['Alta'] or temperatura['Baja']) and ~corrientes['Media'] and ~altura_laminal['Media']
-                   and ~viscodidad['Baja'] and ~densidad['Baja'] and profundidad['Baja']) or
-                  (~(temperatura['Alta'] or temperatura['Baja']) and corrientes['Media'] and altura_laminal['Media']
-                   and ~viscodidad['Baja'] and ~densidad['Baja'] and ~profundidad['Baja']) or
-                  (~(temperatura['Alta'] or temperatura['Baja']) and corrientes['Media'] and ~altura_laminal['Media']
-                   and viscodidad['Baja'] and ~densidad['Baja'] and ~profundidad['Baja']) or
-                  (~(temperatura['Alta'] or temperatura['Baja']) and corrientes['Media'] and ~altura_laminal['Media']
-                   and ~viscodidad['Baja'] and densidad['Baja'] and ~profundidad['Baja']) or
-                  (~(temperatura['Alta'] or temperatura['Baja']) and corrientes['Media'] and ~altura_laminal['Media']
-                   and ~viscodidad['Baja'] and ~densidad['Baja'] and profundidad['Baja']) or
-                  (~(temperatura['Alta'] or temperatura['Baja']) and ~corrientes['Media'] and altura_laminal['Media']
-                   and viscodidad['Baja'] and ~densidad['Baja'] and ~profundidad['Baja']) or
-                  (~(temperatura['Alta'] or temperatura['Baja']) and ~corrientes['Media'] and altura_laminal['Media']
-                   and ~viscodidad['Baja'] and densidad['Baja'] and ~profundidad['Baja']) or
-                  (~(temperatura['Alta'] or temperatura['Baja']) and ~corrientes['Media'] and altura_laminal['Media']
-                   and ~viscodidad['Baja'] and ~densidad['Baja'] and profundidad['Baja']) or
-                  (~(temperatura['Alta'] or temperatura['Baja']) and ~corrientes['Media'] and ~altura_laminal['Media']
-                   and viscodidad['Baja'] and densidad['Baja'] and ~profundidad['Baja']) or
-                  (~(temperatura['Alta'] or temperatura['Baja']) and ~corrientes['Media'] and ~altura_laminal['Media']
-                   and viscodidad['Baja'] and ~densidad['Baja'] and profundidad['Baja']) or
-                  (~(temperatura['Alta'] or temperatura['Baja']) and ~corrientes['Media'] and ~altura_laminal['Media']
-                   and ~viscodidad['Baja'] and densidad['Baja'] and profundidad['Baja']),
-                  turbinas['Buena'])
-
-#  muy buena por 1 amarillo
-r7 = control.Rule(((temperatura['Alta'] or temperatura['Baja']) and ~corrientes['Media'] and ~altura_laminal['Media'] and not
-                  viscodidad['Baja'] and ~densidad['Baja'] and ~profundidad['Baja']) or
-                  (~(temperatura['Alta'] or temperatura['Baja']) and corrientes['Media'] and ~altura_laminal['Media'] and not
-                  viscodidad['Baja'] and ~densidad['Baja'] and ~profundidad['Baja']) or
-                  (~(temperatura['Alta'] or temperatura['Baja']) and ~corrientes['Media'] and altura_laminal['Media'] and not
-                  viscodidad['Baja'] and ~densidad['Baja'] and ~profundidad['Baja']) or
-                  (~(temperatura['Alta'] or temperatura['Baja']) and ~corrientes['Media'] and ~altura_laminal['Media'] and
-                  viscodidad['Baja'] and ~densidad['Baja'] and ~profundidad['Baja']) or
-                  (~(temperatura['Alta'] or temperatura['Baja']) and ~corrientes['Media'] and ~altura_laminal['Media'] and not
-                  viscodidad['Baja'] and densidad['Baja'] and ~profundidad['Baja']) or
-                  (~(temperatura['Alta'] or temperatura['Baja']) and ~corrientes['Media'] and ~altura_laminal['Media'] and not
-                  viscodidad['Baja'] and ~densidad['Baja'] and profundidad['Baja']),
-                  turbinas['Muy Buena'])
-
-
-'''# contar num de naranjas
-num_naranjas = 0
-if corrientes['Baja']:
-    num_naranjas += 1
-if altura_laminal['Baja']:
-    num_naranjas += 1
-if viscodidad['Muy Baja']:
-    num_naranjas += 1
-if profundidad_colocacion['Baja']:
-    num_naranjas += 1
-
-# contar num de amarillos
-num_amarillos = 0
-if temperatura['Baja'] or temperatura['Alta']:
-    num_amarillos += 1
-if corrientes['Media']:
-    num_amarillos += 1
-if altura_laminal['Media']:
-    num_amarillos += 1
-if viscodidad['Baja']:
-    num_amarillos += 1
-if densidad['Baja']:
-    num_amarillos += 1
-if profundidad['Baja']:
-    num_amarillos += 1
-
-# No recomendable
-r3 = control.Rule(num_naranjas >= 1 or num_amarillos >= 3,
-                  turbinas['No recomendable'])
-
-# Buena
-r4 = control.Rule(num_naranjas == 0 and num_amarillos == 2,
-                  turbinas['Buena'])
-
-# Muy Buena
-r4 = control.Rule(num_naranjas == 0 and num_amarillos == 1,
-                  turbinas['Buena'])'''
-
-
-
+# descartada por min 6 amarillos (es el max de amarillos posibles -> todos los amarillos en am)
+r_descartada_amarillos = control.Rule(((temperatura['Alta'] | temperatura['Baja']) & corrientes['Media'] & altura_laminal['Media']
+                                      & viscodidad['Baja'] & densidad['Baja'] & profundidad['Baja']),
+                                      turbinas['Descartada'])

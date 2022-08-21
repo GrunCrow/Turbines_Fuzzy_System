@@ -1,7 +1,8 @@
 from skfuzzy import control
 from FuzzySystem import system_control
-# from FuzzyVariable import salinidad, temperatura, corrientes, altura_laminal, viscodidad, densidad, profundidad, profundidad_colocacion
-from membership_functions import turbinas
+from FuzzyVariable import turbinas
+
+sA = control.ControlSystemSimulation(system_control)
 
 '''while True:
     # Ask for the values for the function:
@@ -14,28 +15,32 @@ from membership_functions import turbinas
     input_profundidad = input("Valor de profundidad: ")
     input_profundidad_colocacion = input("Valor de profundidad de colocacion de la turbina: ")'''
 
-sA = control.ControlSystemSimulation(system_control)
+input_salinidad = 35
+input_temperatura = 20
+input_corrientes = 255
+input_altura_laminal = 80
+input_viscodidad = 1.55
+input_densidad = 1000
+input_profundidad = 3500
+input_profundidad_colocacion = 70
 
-sA.input['salinidad'] = 34
-sA.input['temperatura'] = 16
-sA.input['corrientes'] = 50
-sA.input['altura_laminal'] = 5
-sA.input['viscodidad'] = 1.7
-sA.input['densidad'] = 1050
-sA.input['profundidad'] = 3000
-sA.input['profundidad_colocacion'] = 40
+# Visualizar gráfico de las reglas para comprobar si hay ciclos, es un Digraph
+# system_control.view()
 
-'''sA.input['salinidad'] = float(input_salinidad)
+sA.input['salinidad'] = float(input_salinidad)
 sA.input['temperatura'] = float(input_temperatura)
 sA.input['corrientes'] = float(input_corrientes)
 sA.input['altura_laminal'] = float(input_altura_laminal)
 sA.input['viscodidad'] = float(input_viscodidad)
 sA.input['densidad'] = float(input_densidad)
 sA.input['profundidad'] = float(input_profundidad)
-sA.input['profundidad_colocacion'] = float(input_profundidad_colocacion)'''
+sA.input['profundidad_colocacion'] = float(input_profundidad_colocacion)
 
 sA.compute()
 
-sA.output
+# Resultado en % = res
+res = sA.output
+print(res)
 
+# Visualizar gráfica con donde se encuentran en turbinas los inputs introducidos
 turbinas.view(sim=sA)
