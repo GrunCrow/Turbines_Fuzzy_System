@@ -1,4 +1,4 @@
-from FuzzyVariable import salinidad, temperatura, corrientes, altura_laminal, viscodidad, densidad, profundidad, \
+from Fuzzy_System.FuzzyVariable import salinidad, temperatura, corrientes, altura_laminal, viscosidad, densidad, profundidad, \
     profundidad_colocacion, turbinas
 import skfuzzy as fuzz
 
@@ -31,11 +31,11 @@ altura_laminal['Baja'] = fuzz.trimf(altura_laminal.universe, [20, 30, 45])
 altura_laminal['Media'] = fuzz.trimf(altura_laminal.universe, [40, 50, 70])
 altura_laminal['Alta'] = fuzz.trimf(altura_laminal.universe, [60, 80, 100])
 
-#   viscodidad     (0.300, 2.000, 0.001)
-viscodidad['Muy Baja'] = fuzz.trimf(viscodidad.universe, [0.30, 0.40, 0.70])
-viscodidad['Baja'] = fuzz.trimf(viscodidad.universe, [0.50, 0.85, 1.10])
-viscodidad['Media'] = fuzz.trimf(viscodidad.universe, [1.00, 1.55, 1.90])
-viscodidad['Alta'] = fuzz.trimf(viscodidad.universe, [1.75, 1.95, 2.00])
+#   viscosidad     (0.300, 2.000, 0.001)
+viscosidad['Muy Baja'] = fuzz.trimf(viscosidad.universe, [0.30, 0.40, 0.70])
+viscosidad['Baja'] = fuzz.trimf(viscosidad.universe, [0.50, 0.85, 1.10])
+viscosidad['Media'] = fuzz.trimf(viscosidad.universe, [1.00, 1.55, 1.90])
+viscosidad['Alta'] = fuzz.trimf(viscosidad.universe, [1.75, 1.95, 2.00])
 
 #   densidad     (900, 1100)
 densidad['Muy Baja'] = fuzz.trimf(densidad.universe, [900, 925, 950])
@@ -57,8 +57,8 @@ profundidad_colocacion['Alta'] = fuzz.trimf(profundidad_colocacion.universe, [10
 
 #                                                                           OUTPUTS
 #   turbina 0-100 %
-turbinas['Descartada'] = fuzz.trapmf(turbinas.universe, [0, 0, 30, 40])
-turbinas['No Recomendable'] = fuzz.trimf(turbinas.universe, [30, 50, 70])
+turbinas['Descartada'] = fuzz.trapmf(turbinas.universe, [0, 0, 30, 50])
+turbinas['No Recomendable'] = fuzz.trimf(turbinas.universe, [40, 60, 70])
 turbinas['Buena'] = fuzz.trimf(turbinas.universe, [65, 80, 85])
 turbinas['Muy Buena'] = fuzz.trimf(turbinas.universe, [80, 85, 90])
 turbinas['Optima'] = fuzz.trapmf(turbinas.universe, [85, 95, 100, 100])
