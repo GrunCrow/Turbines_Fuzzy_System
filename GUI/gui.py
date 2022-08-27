@@ -2,7 +2,6 @@ import tkinter as tk
 import tkinter.font as font
 from PIL import ImageTk, Image
 
-
 from Fuzzy_System import FuzzySystem
 
 '''
@@ -16,6 +15,7 @@ Resalte más oscuro: #3B3966
 color_main_bg = "#8683EA"
 color_bg = "#C6C5E6"
 color_bg_subframe = "#D1D0F2"
+color_bg_error = "#EBA09B"
 
 color_font = "#292930"
 
@@ -24,20 +24,20 @@ color_textbox = "#DCDBFF"
 '''res = None
 label_resultado = None'''
 
-# todo añadir constraints para añadir valores, 2 opciones:
+# añadir constraints para añadir valores, 2 opciones:
     # - imponer que el valor sea entre x e y
     # si es menos de x acercar al valor x y si es mas de y acercar a y
 
 
 def cargar():
-    input_salinidad = 35
-    input_temperatura = 20
-    input_corriente = 255
-    input_altura_laminal = 80
-    input_viscosidad = 1.55
-    input_densidad = 1000
-    input_profundidad = 3500
-    input_profundidad_colocacion = 70
+    input_salinidad = 20
+    input_temperatura = -20
+    input_corriente = 0
+    input_altura_laminal = 1
+    input_viscosidad = 0.3
+    input_densidad = 900
+    input_profundidad = 0
+    input_profundidad_colocacion = 0
 
     return input_salinidad, input_temperatura, input_corriente, input_altura_laminal, input_viscosidad, input_densidad, input_profundidad, input_profundidad_colocacion
 
@@ -59,9 +59,11 @@ def calcular():
     clear_resultados()
 
     input_salinidad, input_temperatura, input_corriente, input_altura_laminal, input_viscosidad, input_densidad, input_profundidad, input_profundidad_colocacion = get_inputs()
-    input_salinidad, input_temperatura, input_corriente, input_altura_laminal, input_viscosidad, input_densidad, input_profundidad, input_profundidad_colocacion = cargar()
 
-    if input_salinidad and input_temperatura and input_corriente and input_altura_laminal and input_viscosidad and input_densidad and input_profundidad and input_profundidad_colocacion:
+    if not(input_salinidad or input_temperatura or input_corriente or input_altura_laminal or input_viscosidad or input_densidad or input_profundidad or input_profundidad_colocacion):
+        input_salinidad, input_temperatura, input_corriente, input_altura_laminal, input_viscosidad, input_densidad, input_profundidad, input_profundidad_colocacion = cargar()
+
+    if constraints(input_salinidad, input_temperatura, input_corriente, input_altura_laminal, input_viscosidad, input_densidad, input_profundidad, input_profundidad_colocacion):
         # FuzzySystem.calcular()
         resultado = FuzzySystem.calcular(input_salinidad, input_temperatura, input_corriente, input_altura_laminal, input_viscosidad, input_densidad, input_profundidad, input_profundidad_colocacion)
 
@@ -79,6 +81,41 @@ def calcular():
         label_resultado = tk.Label(frame_resultados, anchor="center", pady=10, text=result, fg=color_font, bg=color_bg_subframe)
         label_resultado['font'] = resultado_cfg
         label_resultado.pack()
+
+
+def open_popup(parametro, valor_minimo, valor_maximo):
+    top = tk.Toplevel(root)
+    top.config(bg=color_bg_error)
+    top.geometry("600x100")
+    top.resizable(False, False)
+    top.title("Error en el valor de parametro")
+    #root.eval(f'tk::PlaceWindow {str(top)} center')
+    error = "El valor del parametro " + str(parametro) + " debe estar entre " + str(valor_minimo) + " y " + str(valor_maximo)
+    tk.Label(top, text=error, bg=color_bg_error, font=('Nunito 14')).place(x=40, y=35)
+
+
+def constraints(input_salinidad, input_temperatura, input_corriente, input_altura_laminal, input_viscosidad, input_densidad, input_profundidad, input_profundidad_colocacion):
+    if not (20 <= float(input_salinidad) <= 50):
+        open_popup("Salinidad", 20, 50)
+    elif not (-20 <= float(input_temperatura) <= 50):
+        open_popup("Temperatura", -20, 50)
+    elif not (0 <= float(input_corriente) <= 300):
+        open_popup("Corrientes", 0, 300)
+    # todo cambiar valores de altura laminal
+    elif not (0 <= float(input_altura_laminal) <= 100):
+        open_popup("Altura Laminal", 0, 100)
+    elif not (0.3 <= float(input_viscosidad) <= 2):
+        open_popup("Viscosidad", 0.3, 2)
+    elif not (900 <= float(input_densidad) <= 1100):
+        open_popup("Densidad", 90, 1100)
+    elif not (0 <= float(input_profundidad) <= 7000):
+        open_popup("Profundidad", 0, 7000)
+    elif not (0 <= float(input_profundidad_colocacion) <= 150):
+        open_popup("Profundidad de Colocación", 0, 150)
+    else:
+        return True
+
+    return False
 
 
 def clear_textbox():
@@ -104,12 +141,13 @@ def clear_all():
     clear_resultados()
 
 
-
+#                                              VENTANA PRINCIPAL
 root = tk.Tk()
 root.resizable(False, False)
 root.title("Calculadora de Turbina con un Sistema Difuso")
 root.geometry("900x500")
 root.configure(bg=color_main_bg)
+
 
 '''canvas = tk.Canvas(root, height=500, width=900, bg=color_main_bg)
 canvas.pack()'''
@@ -153,13 +191,13 @@ frame_resultados.place(x="500", y="85")
 
 frame_resultados.pack_propagate(False)
 
+#                                          TITULO Y PARAMETROS
 
 Title_cfg = font.Font(family='Nunito', size=25, weight="bold")
 title = tk.Label(frame, text="Calculadora de Turbina", fg=color_font, bg=color_bg)
 title['font'] = Title_cfg
 title.config(anchor="center")
 
-#title.pack(pady=10)
 title.grid(row=0, column=1, pady=10)
 
 parametros_cfg = font.Font(family='Nunito', size=15)
@@ -169,60 +207,69 @@ salinidad['font'] = parametros_cfg
 #salinidad.pack()
 salinidad.grid(row=1, column=0, sticky="W", padx=20, pady=10)
 
-textbox_input_salinidad = tk.Entry(frame, width=20, bg=color_textbox, fg=color_font)
+textbox_input_salinidad = tk.Entry(frame, width=20, bg=color_textbox, fg=color_font, justify='right')
 textbox_input_salinidad.grid(row=1, column=1, sticky="w", padx=30)
-# input_salinidad.insert("20-50")
+textbox_input_salinidad.insert("end", "20")
 
 temperatura = tk.Label(frame, text="Temperatura", fg=color_font, bg=color_bg_subframe)
 temperatura['font'] = parametros_cfg
 #temperatura.pack(anchor="nw", padx=20, pady=10)
 temperatura.grid(row=2, column=0, sticky="W", padx=20, pady=10)
 
-textbox_input_temperatura = tk.Entry(frame, width=20, bg=color_textbox, fg=color_font)
+textbox_input_temperatura = tk.Entry(frame, width=20, bg=color_textbox, fg=color_font, justify='right')
 textbox_input_temperatura.grid(row=2, column=1, sticky="w", padx=30)
+textbox_input_temperatura.insert("end", "-20")
 
 corriente = tk.Label(frame, text="Corriente", fg=color_font, bg=color_bg_subframe)
 corriente['font'] = parametros_cfg
 #corriente.pack(anchor="nw", padx=20, pady=10)
 corriente.grid(row=3, column=0, sticky="W", padx=20, pady=10)
 
-textbox_input_corriente = tk.Entry(frame, width=20, bg=color_textbox, fg=color_font)
+textbox_input_corriente = tk.Entry(frame, width=20, bg=color_textbox, fg=color_font, justify='right')
 textbox_input_corriente.grid(row=3, column=1, sticky="w", padx=30)
+textbox_input_corriente.insert("end", "0")
+
 
 altura_laminal = tk.Label(frame, text="Altura Laminal", fg=color_font, bg=color_bg_subframe)
 altura_laminal['font'] = parametros_cfg
 altura_laminal.grid(row=4, column=0, sticky="W", padx=20, pady=10)
 
-textbox_input_altura_laminal = tk.Entry(frame, width=20, bg=color_textbox, fg=color_font)
+textbox_input_altura_laminal = tk.Entry(frame, width=20, bg=color_textbox, fg=color_font, justify='right')
 textbox_input_altura_laminal.grid(row=4, column=1, sticky="w", padx=30)
+textbox_input_altura_laminal.insert("end", "0")
+
 
 viscosidad = tk.Label(frame, text="Viscosidad", fg=color_font, bg=color_bg_subframe)
 viscosidad['font'] = parametros_cfg
 viscosidad.grid(row=5, column=0, sticky="W", padx=20, pady=10)
 
-textbox_input_viscosidad = tk.Entry(frame, width=20, bg=color_textbox, fg=color_font)
+textbox_input_viscosidad = tk.Entry(frame, width=20, bg=color_textbox, fg=color_font, justify='right')
 textbox_input_viscosidad.grid(row=5, column=1, sticky="w", padx=30)
+textbox_input_viscosidad.insert("end", "0.3")
 
 densidad = tk.Label(frame, text="Densidad", fg=color_font, bg=color_bg_subframe)
 densidad['font'] = parametros_cfg
 densidad.grid(row=6, column=0, sticky="W", padx=20, pady=10)
 
-textbox_input_densidad = tk.Entry(frame, width=20, bg=color_textbox, fg=color_font)
+textbox_input_densidad = tk.Entry(frame, width=20, bg=color_textbox, fg=color_font, justify='right')
 textbox_input_densidad.grid(row=6, column=1, sticky="w", padx=30)
+textbox_input_densidad.insert("end", "900")
 
 profundidad = tk.Label(frame, text="Profundidad", fg=color_font, bg=color_bg_subframe)
 profundidad['font'] = parametros_cfg
 profundidad.grid(row=7, column=0, sticky="W", padx=20, pady=10)
 
-textbox_input_profundidad = tk.Entry(frame, width=20, bg=color_textbox, fg=color_font)
+textbox_input_profundidad = tk.Entry(frame, width=20, bg=color_textbox, fg=color_font, justify='right')
 textbox_input_profundidad.grid(row=7, column=1, sticky="w", padx=30)
+textbox_input_profundidad.insert("end", "0")
 
 profundidad_colocacion = tk.Label(frame, text="Profundidad de Colocación", fg=color_font, bg=color_bg_subframe)
 profundidad_colocacion['font'] = parametros_cfg
 profundidad_colocacion.grid(row=8, column=0, sticky="W", padx=20, pady=10)
 
-textbox_input_profundidad_colocacion = tk.Entry(frame, width=20, bg=color_textbox)
+textbox_input_profundidad_colocacion = tk.Entry(frame, width=20, bg=color_textbox, justify='right')
 textbox_input_profundidad_colocacion.grid(row=8, column=1, sticky="w", padx=30)
+textbox_input_profundidad_colocacion.insert("end", "0")
 
 #                                                  BOTONES
 
