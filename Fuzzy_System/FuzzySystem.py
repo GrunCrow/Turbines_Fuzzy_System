@@ -16,7 +16,7 @@ def calcular(input_salinidad, input_temperatura, input_corrientes, input_altura_
 
     # Visualizar gráfico de las reglas para comprobar si hay ciclos, es un Digraph
     system_control.view()
-    gr = system_control.graph
+    # gr = system_control.graph
 
     def dfs(graph, start):
         color = {i: 'white' for i in graph}
