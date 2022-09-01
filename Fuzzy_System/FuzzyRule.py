@@ -3,18 +3,18 @@ from Fuzzy_System.membership_functions import salinity, temperature, currents, l
     depth, placement_depth, turbines
 
 '''
-Declaración de las reglas lógicas para el sistema
+Logic Rules Declaration for the System
 '''
 
-#                                                 TURBINA OPTIMA
-# optima -> tod verde
+#                                                 OPTIMAL TURBINE
+# optimal -> all green
 r_optimal = control.Rule((salinity['Medium'] & temperature['Medium'] & currents['High'] & laminal_height['High'] &
                          viscosity['Medium'] & density['Medium'] & depth['Medium'] &
                          placement_depth['Medium']),
-                        turbines['Optimal'])
+                         turbines['Optimal'])
 
-#                                                   TURBINA Very BUENA
-# Very buena -> 1 amarillo
+#                                                   VERY GOOD TURBINE
+# Very Good -> 1 yellow
 r_very_good = control.Rule((salinity['Medium'] & placement_depth['Medium'] &
                             ((temperature['Medium'] & currents['High'] & laminal_height['High'] & viscosity['Medium'] & density['Medium'] & depth['Low']) |
                              (temperature['Medium'] & currents['High'] & laminal_height['High'] & viscosity['Medium'] & density['Low'] & depth['Medium']) |
@@ -24,32 +24,32 @@ r_very_good = control.Rule((salinity['Medium'] & placement_depth['Medium'] &
                              ((temperature['High'] | temperature['Low']) & currents['High'] & laminal_height['High'] & viscosity['Medium'] & density['Medium'] & depth['Medium']))),
                            turbines['Very Good'])
 
-#                                                           TURBINA BUENA
-# buena -> 2 amarillos
+#                                                           GOOD TURBINE
+# good -> 2 yellows
 r_good = control.Rule((salinity['Medium'] & placement_depth['Medium'] &
-                        (((temperature['High'] | temperature['Low']) & currents['Medium'] & laminal_height['High'] & viscosity['Medium'] & density['Medium'] & depth['Medium']) |
-                         ((temperature['High'] | temperature['Low']) & currents['High'] & laminal_height['Medium'] & viscosity['Medium'] & density['Medium'] & depth['Medium']) |
-                         ((temperature['High'] | temperature['Low']) & currents['High'] & laminal_height['High'] & viscosity['Low'] & density['Medium'] & depth['Medium']) |
-                         ((temperature['High'] | temperature['Low']) & currents['High'] & laminal_height['High'] & viscosity['Medium'] & density['Low'] & depth['Medium']) |
-                         ((temperature['High'] | temperature['Low']) & currents['High'] & laminal_height['High'] & viscosity['Medium'] & density['Medium'] & depth['Low']) |
-                         (temperature['Medium'] & currents['Medium'] & laminal_height['Medium'] & viscosity['Medium'] & density['Medium'] & depth['Medium']) |
-                         (temperature['Medium'] & currents['Medium'] & laminal_height['High'] & viscosity['Low'] & density['Medium'] & depth['Medium']) |
-                         (temperature['Medium'] & currents['Medium'] & laminal_height['High'] & viscosity['Medium'] & density['Low'] & depth['Medium']) |
-                         (temperature['Medium'] & currents['Medium'] & laminal_height['High'] & viscosity['Medium'] & density['Medium'] & depth['Low']) |
-                         (temperature['Medium'] & currents['High'] & laminal_height['Medium'] & viscosity['Low'] & density['Medium'] & depth['Medium']) |
-                         (temperature['Medium'] & currents['High'] & laminal_height['Medium'] & viscosity['Medium'] & density['Low'] & depth['Medium']) |
-                         (temperature['Medium'] & currents['High'] & laminal_height['Medium'] & viscosity['Medium'] & density['Medium'] & depth['Low']) |
-                         (temperature['Medium'] & currents['High'] & laminal_height['High'] & viscosity['Low'] & density['Low'] & depth['Medium']) |
-                         (temperature['Medium'] & currents['High'] & laminal_height['High'] & viscosity['Low'] & density['Medium'] & depth['Low']) |
-                         (temperature['Medium'] & currents['High'] & laminal_height['High'] & viscosity['Medium'] & density['Low'] & depth['Low']))),
-                       turbines['Good'])
+                       (((temperature['High'] | temperature['Low']) & currents['Medium'] & laminal_height['High'] & viscosity['Medium'] & density['Medium'] & depth['Medium']) |
+                        ((temperature['High'] | temperature['Low']) & currents['High'] & laminal_height['Medium'] & viscosity['Medium'] & density['Medium'] & depth['Medium']) |
+                        ((temperature['High'] | temperature['Low']) & currents['High'] & laminal_height['High'] & viscosity['Low'] & density['Medium'] & depth['Medium']) |
+                        ((temperature['High'] | temperature['Low']) & currents['High'] & laminal_height['High'] & viscosity['Medium'] & density['Low'] & depth['Medium']) |
+                        ((temperature['High'] | temperature['Low']) & currents['High'] & laminal_height['High'] & viscosity['Medium'] & density['Medium'] & depth['Low']) |
+                        (temperature['Medium'] & currents['Medium'] & laminal_height['Medium'] & viscosity['Medium'] & density['Medium'] & depth['Medium']) |
+                        (temperature['Medium'] & currents['Medium'] & laminal_height['High'] & viscosity['Low'] & density['Medium'] & depth['Medium']) |
+                        (temperature['Medium'] & currents['Medium'] & laminal_height['High'] & viscosity['Medium'] & density['Low'] & depth['Medium']) |
+                        (temperature['Medium'] & currents['Medium'] & laminal_height['High'] & viscosity['Medium'] & density['Medium'] & depth['Low']) |
+                        (temperature['Medium'] & currents['High'] & laminal_height['Medium'] & viscosity['Low'] & density['Medium'] & depth['Medium']) |
+                        (temperature['Medium'] & currents['High'] & laminal_height['Medium'] & viscosity['Medium'] & density['Low'] & depth['Medium']) |
+                        (temperature['Medium'] & currents['High'] & laminal_height['Medium'] & viscosity['Medium'] & density['Medium'] & depth['Low']) |
+                        (temperature['Medium'] & currents['High'] & laminal_height['High'] & viscosity['Low'] & density['Low'] & depth['Medium']) |
+                        (temperature['Medium'] & currents['High'] & laminal_height['High'] & viscosity['Low'] & density['Medium'] & depth['Low']) |
+                        (temperature['Medium'] & currents['High'] & laminal_height['High'] & viscosity['Medium'] & density['Low'] & depth['Low']))),
+                      turbines['Good'])
 
-#                                                   TURBINA NO RECOMENDABLE
-# el problema está en el ~ hay que cambiarlo por not pero control.Rule no acepta not, asi que hay que cambiarlo por las
-#   leyes de negacion, ya que con ~ devuelve un valor numerico (0 en el caso q da error y entonces la membership no se puede
-#   calculate bien)
-# no recomendable por 1 naranja -> solo 1 naranja, 1 naranja + 0/1/2 amarillos
-#                                ningun rojo
+#                                                    NOT RECOMMENDABLE TURBINE
+# the problem is in the ~ you have to change it to not but control.Rule does not accept not, so you have to change it to
+# negation laws, since with ~ it returns a numeric value (0 in the case that gives an error and then the membership cannot be
+# calculate well)
+# not recommendable for 1 orange -> just 1 orange, 1 orange + 0/1/2 yellows
+#                                no red
 r_not_recommendable = control.Rule((((salinity['Medium'] &
                                     (temperature['High'] | temperature['Medium'] | temperature['Low']) &
                                     (currents['High'] | currents['Medium'] | currents['Low']) &
@@ -58,24 +58,24 @@ r_not_recommendable = control.Rule((((salinity['Medium'] &
                                     (density['Medium'] | density['Low']) &
                                     (depth['Medium'] | depth['Low']) &
                                     (placement_depth['Medium'] | placement_depth['Low'])) &
-                                   # no tod amarillo
+                                   # no all yellow
                                    ((temperature['Medium'] & (currents['High'] | currents['Low']) &
                                      (laminal_height['High'] | laminal_height['Low']) & (viscosity['Medium'] | viscosity['Very Low']) &
                                      density['Medium'] & depth['Medium'] & (placement_depth['Medium'] | placement_depth['Low']))) &
-                                   # no + 1 naranjas
-                                   # corrientes naranja resto de otro
+                                   # no + 1 oranges
+                                   # currents orange others are other color
                                    ((currents['Low'] & (laminal_height['High'] | laminal_height['Medium']) & (viscosity['Medium'] | viscosity['Low']) & placement_depth['Medium']) |
-                                    # altura laminal naranja resto de otro
+                                    # laminal height orange others are other color
                                     ((currents['High'] | currents['Medium']) & (laminal_height['Low']) & (viscosity['Medium'] | viscosity['Low']) & placement_depth['Medium']) |
-                                    # viscosidad naranja resto de otro
+                                    # viscosity orange others are other color
                                     ((currents['High'] | currents['Medium']) & (laminal_height['High'] | laminal_height['Medium']) & (viscosity['Very Low']) & placement_depth['Medium']) |
-                                    # prof colocacion naranja resto de otro
+                                    # placement depth orange others are other color
                                     ((currents['High'] | currents['Medium']) & (laminal_height['High'] | laminal_height['Medium']) & (viscosity['Medium'] | viscosity['Low']) & placement_depth['Low']))) &
-                                  # salinidad será Medium si o si en este caso -> incluir
+                                  # salinity will be Medium in this case -> include
                                   ((salinity['Medium']) &
-                                   # algun naranja y menos de 3 amarillos (0/1/2)
-                                   #  no hay mas de 2 amarillos
-                                   # temp y corrientes amarillo
+                                   # any orange and less than 3 yellows (0/1/2)
+                                   #  no more than 2 yellows
+                                   # temp and currents yellow
                                    ((((temperature['Medium'] | (currents['High'] | currents['Low']) | (laminal_height['High'] | laminal_height['Low']) & (viscosity['Medium'] | viscosity['Very Low']) & density['Medium'] & depth['Medium'])
                                       & (temperature['Medium'] | (currents['High'] | currents['Low']) & (laminal_height['High'] | laminal_height['Low']) & (viscosity['Medium'] | viscosity['Very Low']) & density['Medium'] & depth['Medium'])
                                       & (temperature['Medium'] | (currents['High'] | currents['Low']) & (laminal_height['High'] | laminal_height['Low']) & (viscosity['Medium'] | viscosity['Very Low']) | density['Medium'] & depth['Medium'])
@@ -86,12 +86,12 @@ r_not_recommendable = control.Rule((((salinity['Medium'] &
                                       & (temperature['Medium'] & (currents['High'] | currents['Low']) & (laminal_height['High'] | laminal_height['Low']) | (viscosity['Medium'] | viscosity['Very Low']) | density['Medium'] & depth['Medium'])
                                       & (temperature['Medium'] & (currents['High'] | currents['Low']) & (laminal_height['High'] | laminal_height['Low']) | (viscosity['Medium'] | viscosity['Very Low']) & density['Medium'] | depth['Medium'])
                                       & (temperature['Medium'] & (currents['High'] | currents['Low']) & (laminal_height['High'] | laminal_height['Low']) & (viscosity['Medium'] | viscosity['Very Low']) | density['Medium'] | depth['Medium']))) &
-                                    # algun naranja
+                                    # any orange
                                     (currents['Low'] | laminal_height['Low'] | viscosity['Very Low'] | placement_depth['Low'])) |
-                                   # ningun naranja y hasta 5 amarillos
-                                   #          ningun naranja
+                                   # no orange and 5 yellows max
+                                   #          no orange
                                    (((currents['High'] | currents['Medium']) & (laminal_height['High'] | laminal_height['Medium']) & (viscosity['High'] | viscosity['Medium']) & placement_depth['Medium']) &
-                                    # hasta 5 amarillos con min 3
+                                    # max 5 yellows with min 3
                                     (((temperature['High'] | temperature['Low']) & currents['Medium'] &
                                       laminal_height['Medium'] | viscosity['Low'] | density['Low'] |
                                       depth['Low'])
@@ -124,28 +124,28 @@ r_not_recommendable = control.Rule((((salinity['Medium'] &
                                         depth['Low']))))),
                                    turbines['Not Recommendable'])
 
-#                                                   TURBINA DESCARTADA
+#                                                  DISCARDED TURBINE
 # todo check
 
-#                               algun rojo
+#                               any red
 r_discarded = control.Rule((((salinity['High'] | salinity['Low'])
-                              | (temperature['Very High'] | temperature['Very Low'])
-                              | currents['Very Low']
-                              | laminal_height['Very Low']
-                              | viscosity['High']
-                              | (density['High'] | density['Very Low'])
-                              | (depth['High'] | depth['Very Low'])
-                              | (placement_depth['High'] | placement_depth['Very Low'])) |
-                             # al menos 2 naranjas
-                             ((currents['Low'] & laminal_height['Low']) | (currents['Low'] & viscosity['Very Low']) |
-                              (currents['Low'] & placement_depth['Low']) |
-                              (laminal_height['Low'] & viscosity['Very Low']) |
-                              (laminal_height['Low'] & placement_depth['Low']) |
-                              (viscosity['Very Low'] & placement_depth['Low'])) |
-                             # 1 naranja y 3 amarillos
-                             #       al menos 1 naranja
-                             ((currents['Low'] | laminal_height['Low'] | viscosity['Very Low'] | placement_depth['Low']) &
-                              #      al menos 3 amarillos
+                             | (temperature['Very High'] | temperature['Very Low'])
+                             | currents['Very Low']
+                             | laminal_height['Very Low']
+                             | viscosity['High']
+                             | (density['High'] | density['Very Low'])
+                             | (depth['High'] | depth['Very Low'])
+                             | (placement_depth['High'] | placement_depth['Very Low'])) |
+                            # at least 2 oranges
+                            ((currents['Low'] & laminal_height['Low']) | (currents['Low'] & viscosity['Very Low']) |
+                             (currents['Low'] & placement_depth['Low']) |
+                             (laminal_height['Low'] & viscosity['Very Low']) |
+                             (laminal_height['Low'] & placement_depth['Low']) |
+                             (viscosity['Very Low'] & placement_depth['Low'])) |
+                            # 1 orange and 3 yellows
+                            #       at least 1 orange
+                            ((currents['Low'] | laminal_height['Low'] | viscosity['Very Low'] | placement_depth['Low']) &
+                             #      at least 3 yellows
                               (((temperature['High'] | temperature['Low']) & currents['Medium'] & laminal_height['Medium'] | viscosity['Low'] | density['Low'] | depth['Low'])
                                | ((temperature['High'] | temperature['Low']) & currents['Medium'] | laminal_height['Medium'] & viscosity['Low'] | density['Low'] | depth['Low'])
                                | ((temperature['High'] | temperature['Low']) & currents['Medium'] | laminal_height['Medium'] | viscosity['Low'] & density['Low'] | depth['Low'])
@@ -156,8 +156,8 @@ r_discarded = control.Rule((((salinity['High'] | salinity['Low'])
                                | ((temperature['High'] | temperature['Low']) | currents['Medium'] | laminal_height['Medium'] & viscosity['Low'] & density['Low'] | depth['Low'])
                                | ((temperature['High'] | temperature['Low']) | currents['Medium'] | laminal_height['Medium'] & viscosity['Low'] | density['Low'] & depth['Low'])
                                | ((temperature['High'] | temperature['Low']) | currents['Medium'] | laminal_height['Medium'] | viscosity['Low'] & density['Low'] & depth['Low']))) |
-                             # descartada por min 6 amarillos (max de amarillos posibles -> todos los amarillos en am)
-                             # salinidad y prof de colocacion da igual los valores
-                             ((temperature['High'] | temperature['Low']) & currents['Medium'] & laminal_height['Medium']
-                              & viscosity['Low'] & density['Low'] & depth['Low'])),
-                            turbines['Discarded'])
+                            # discarded for min 6 yellows (max of yellows possible -> all with yellows in yellow)
+                            # salinity y placement depth (no mather the values))
+                            ((temperature['High'] | temperature['Low']) & currents['Medium'] & laminal_height['Medium']
+                             & viscosity['Low'] & density['Low'] & depth['Low'])),
+                           turbines['Discarded'])

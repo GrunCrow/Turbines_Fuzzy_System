@@ -1,21 +1,22 @@
 import numpy as np
 from skfuzzy import control
 
-'''Definición de las variables lo cual incluye:
-    - Dominio de cada variable (val min y max posibles y paso entre valores)
-    - Declaración de los inputs (Antecedentes) y outputs (Consecuente) para la libreria skfuzzy
+'''
+Definition of the variables which includes:
+    - Domain of each variable (val min and max possible and step between values)
+    - Declaration of the inputs (Background) and outputs (Consequent) for the skfuzzy library
 '''
 
-domain_salinity = np.arange(20, 50)  # en gramos por litros
-domain_temperature = np.arange(-20, 50, 0.1).round(1)  # en grados celsius
-domain_currents = np.arange(0, 300)  # en cm por segundo
-domain_laminal_height = np.arange(0, 100)  # TODO Dominio de la altura laminal
-domain_viscosity = np.arange(0.3, 2, 0.01)  # en centipoise (mPa)
+domain_salinity = np.arange(20, 50)  # grame per litre
+domain_temperature = np.arange(-20, 50, 0.1).round(1)  # grades celsius
+domain_currents = np.arange(0, 300)  # cm per second
+domain_laminal_height = np.arange(0, 100)  # TODO Domain of laminal Height
+domain_viscosity = np.arange(0.3, 2, 0.01)  # centipoise (mPa)
 domain_density = np.arange(900, 1100)  # Kg/m3
 domain_depth = np.arange(0, 7000)  # m
 domain_placement_depth = np.arange(0, 150)  # m
 
-# domain_turbines = np.array(['Optima', 'Muy Buena', 'Buena', 'No recomendable', 'Descartada'])
+# domain_turbines = np.array(['Optimal', 'Very Good', 'Good', 'Not recommendable', 'Discarded'])
 domain_turbines = np.arange(0, 100)  # %
 
 salinity = control.Antecedent(domain_salinity, 'salinity')

@@ -5,11 +5,11 @@ from PIL import ImageTk, Image
 from Fuzzy_System import FuzzySystem
 
 '''
-Paleta de colores:
-Letras mas claras: #585866
-Medio: #8F8FA6
-Medio claro: #B0AFCC
-Resalte más oscuro: #3B3966
+Color Palette:
+Lighter fonts: #585866
+Medium: #8F8FA6
+Medium light: #B0AFCC
+Darker highlight: #3B3966
 '''
 
 color_main_bg = "#8683EA"
@@ -22,12 +22,7 @@ color_font = "#292930"
 color_textbox = "#DCDBFF"
 
 '''res = None
-label_resultado = None'''
-
-# añadir constraints para añadir valores, 2 opciones:
-    # - imponer que el valor sea entre x e y
-    # si es menos de x acercar al valor x y si es mas de y acercar a y
-
+label_result = None'''
 
 def load():
     input_salinity = 20
@@ -65,53 +60,53 @@ def calculate():
 
     if constraints(input_salinity, input_temperature, input_currents, input_laminal_height, input_viscosity, input_density, input_depth, input_placement_depth):
         # FuzzySystem.calculate()
-        resultado = FuzzySystem.calculate(input_salinity, input_temperature, input_currents, input_laminal_height, input_viscosity, input_density, input_depth, input_placement_depth)
+        result = FuzzySystem.calculate(input_salinity, input_temperature, input_currents, input_laminal_height, input_viscosity, input_density, input_depth, input_placement_depth)
 
         img = Image.open("turbines_results.png")
         new_img = img.resize((320, 240))
         new_img.save("resized_turbines_results.png")
         image = ImageTk.PhotoImage(Image.open("resized_turbines_results.png"))
 
-        res = tk.Label(frame_resultados, image=image, padx=20)
+        res = tk.Label(frame_results, image=image, padx=20)
         res.pack()
 
-        resultado = round(resultado, 3)
-        result = str(resultado) + '%'
-        resultado_cfg = font.Font(family='Nunito', size=12, weight="bold")
-        label_resultado = tk.Label(frame_resultados, anchor="center", pady=10, text=result, fg=color_font, bg=color_bg_subframe)
-        label_resultado['font'] = resultado_cfg
-        label_resultado.pack()
+        result = round(result, 3)
+        result = str(result) + '%'
+        result_cfg = font.Font(family='Nunito', size=12, weight="bold")
+        label_result = tk.Label(frame_results, anchor="center", pady=10, text=result, fg=color_font, bg=color_bg_subframe)
+        label_result['font'] = result_cfg
+        label_result.pack()
 
 
-def open_popup(parametro, valor_minimo, valor_maximo):
+def open_popup(parameter, minimum_value, maximum_value):
     top = tk.Toplevel(root)
     top.config(bg=color_bg_error)
     top.geometry("600x100")
     top.resizable(False, False)
-    top.title("Error en el valor de parametro")
+    top.title("Error in parameter value")
     #root.eval(f'tk::PlaceWindow {str(top)} center')
-    error = "El valor del parametro " + str(parametro) + " debe estar entre " + str(valor_minimo) + " y " + str(valor_maximo)
+    error = "Parameter value " + str(parameter) + " must be between " + str(minimum_value) + " and " + str(maximum_value)
     tk.Label(top, text=error, bg=color_bg_error, font=('Nunito 14')).place(x=40, y=35)
 
 
 def constraints(input_salinity, input_temperature, input_currents, input_laminal_height, input_viscosity, input_density, input_depth, input_placement_depth):
     if not (20 <= float(input_salinity) <= 50):
-        open_popup("Salinidad", 20, 50)
+        open_popup("Salinity", 20, 50)
     elif not (-20 <= float(input_temperature) <= 50):
         open_popup("Temperature", -20, 50)
     elif not (0 <= float(input_currents) <= 300):
-        open_popup("currentss", 0, 300)
+        open_popup("Currents", 0, 300)
     # todo cambiar valores de altura laminal
     elif not (0 <= float(input_laminal_height) <= 100):
-        open_popup("Altura Laminal", 0, 100)
+        open_popup("Laminal Height", 0, 100)
     elif not (0.3 <= float(input_viscosity) <= 2):
         open_popup("Viscosity", 0.3, 2)
     elif not (900 <= float(input_density) <= 1100):
         open_popup("Density", 90, 1100)
     elif not (0 <= float(input_depth) <= 7000):
-        open_popup("depth", 0, 7000)
+        open_popup("Depth", 0, 7000)
     elif not (0 <= float(input_placement_depth) <= 150):
-        open_popup("depth de Colocación", 0, 150)
+        open_popup("Placement Depth", 0, 150)
     else:
         return True
 
@@ -130,9 +125,9 @@ def clear_textbox():
 
 
 def clear_results():
-    not_empty = frame_resultados.winfo_children()
+    not_empty = frame_results.winfo_children()
     if not_empty:
-        for widgets in frame_resultados.winfo_children():
+        for widgets in frame_results.winfo_children():
             widgets.destroy()
 
 
@@ -141,10 +136,10 @@ def clear_all():
     clear_results()
 
 
-#                                              VENTANA PRINCIPAL
+#                                              MAIN WINDOW
 root = tk.Tk()
 root.resizable(False, False)
-root.title("Calculadora de Turbina con un Sistema Difuso")
+root.title("Turbines Fuzzy System Calculator")
 root.geometry("900x500")
 root.configure(bg=color_main_bg)
 
@@ -152,15 +147,15 @@ root.configure(bg=color_main_bg)
 '''canvas = tk.Canvas(root, height=500, width=900, bg=color_main_bg)
 canvas.pack()'''
 
-#                                              FRAMES Y SUBFRAMES
+#                                              FRAMES AND SUBFRAMES
 frame = tk.Frame(root, bg=color_bg)
 frame.place(relwidth=0.97, relheight=0.95, relx=0.015, rely=0.025)
 
 frame.grid_rowconfigure(9, weight=1)
 frame.grid_columnconfigure(3, weight=1)
 
-frame_salinidad = tk.Frame(frame, bg=color_bg_subframe, width="437", height="41")
-frame_salinidad.place(x="15", y="70")
+frame_salinity = tk.Frame(frame, bg=color_bg_subframe, width="437", height="41")
+frame_salinity.place(x="15", y="70")
 
 frame_temperature = tk.Frame(frame, bg=color_bg_subframe, width="437", height="41")
 frame_temperature.place(x="15", y="119")
@@ -183,18 +178,18 @@ frame_depth.place(x="15", y="364")
 frame_placement_depth = tk.Frame(frame, bg=color_bg_subframe, width="437", height="41")
 frame_placement_depth.place(x="15", y="413")
 
-frame_resultados2 = tk.Frame(frame, bg=color_bg_subframe, width="350", height="300") # width="350", height="300"
-frame_resultados2.place(x="500", y="70")
+frame_results2 = tk.Frame(frame, bg=color_bg_subframe, width="350", height="300") # width="350", height="300"
+frame_results2.place(x="500", y="70")
 
-frame_resultados = tk.Frame(frame, bg=color_bg_subframe, width="350", height="290")
-frame_resultados.place(x="500", y="85")
+frame_results = tk.Frame(frame, bg=color_bg_subframe, width="350", height="290")
+frame_results.place(x="500", y="85")
 
-frame_resultados.pack_propagate(False)
+frame_results.pack_propagate(False)
 
-#                                          TITULO Y PARAMETROS
+#                                          TITLE AND PARAMETERS
 
 Title_cfg = font.Font(family='Nunito', size=25, weight="bold")
-title = tk.Label(frame, text="Calculadora de Turbina", fg=color_font, bg=color_bg)
+title = tk.Label(frame, text="Turbine Calculator", fg=color_font, bg=color_bg)
 title['font'] = Title_cfg
 title.config(anchor="center")
 
@@ -202,7 +197,7 @@ title.grid(row=0, column=1, pady=10)
 
 parametros_cfg = font.Font(family='Nunito', size=15)
 
-salinidad = tk.Label(frame, text="Salinidad", fg=color_font, bg=color_bg_subframe)
+salinidad = tk.Label(frame, text="Salinity", fg=color_font, bg=color_bg_subframe)
 salinidad['font'] = parametros_cfg
 #salinidad.pack()
 salinidad.grid(row=1, column=0, sticky="W", padx=20, pady=10)

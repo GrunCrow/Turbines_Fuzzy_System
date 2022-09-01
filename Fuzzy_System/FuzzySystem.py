@@ -5,16 +5,16 @@ from Fuzzy_System.FuzzyVariable import turbines
 
 def calculate(input_salinity, input_temperature, input_currents, input_laminal_height, input_viscosity,
               input_density, input_depth, input_placement_depth):
-    system_control = control.ControlSystem([r_optimal,   # tod verde
-                                            r_very_good,    # tod verde y un amarillo
-                                            r_good,    # tod verde y 2 amarillo
-                                            r_not_recommendable,  # 1 nar + 0/1/2 amar / 3 amar + 0/1/2 amar
-                                            r_discarded    # min (1 rojo, 2 naranjas, 1 naranja + 3 amar, 6 amarillos)
+    system_control = control.ControlSystem([r_optimal,   # all green
+                                            r_very_good,    # all green but 1 yellow
+                                            r_good,    # all green but 2 yellow
+                                            r_not_recommendable,  # 1 or + 0/1/2 yell / 3 yell + 0/1/2 yell
+                                            r_discarded    # min (1 red, 2 oranges, 1 orange + 3 yell, 6 yellow)
                                             ])
 
     sA = control.ControlSystemSimulation(system_control)
 
-    # Visualizar gráfico de las reglas para comprobar si hay ciclos, es un Digraph
+    # Display graph of the rules to check for cycles, it is a Digraph
     system_control.view()
     # gr = system_control.graph
 
@@ -47,7 +47,7 @@ def calculate(input_salinity, input_temperature, input_currents, input_laminal_h
         return False
 
     '''if cycle_exists(gr):
-        print("Hay ciclos en las reglas")'''
+        print("There are cycles in the rules")'''
 
     sA.input['salinity'] = float(input_salinity)
     sA.input['temperature'] = float(input_temperature)
@@ -60,13 +60,13 @@ def calculate(input_salinity, input_temperature, input_currents, input_laminal_h
 
     sA.compute()
 
-    # Resultado en % = res
+    # Result in % = res
     res = sA.output
-    # resultado = next(iter(res))
+    # result = next(iter(res))
     result = next(iter(res.items()))
     result = next(iter(res.values()))
 
-    # Visualizar gráfica con donde se encuentran en turbinas los inputs introducidos
+    # Visualize graph with where the inputs entered are found in turbines
     image_name = 'turbines_results.png'
     turbines.view(image_name, sim=sA)
 
