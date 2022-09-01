@@ -15,11 +15,11 @@ salinity['High'] = fuzz.trapmf(salinity.universe, [37, 45, 50, 50])
 # salinity.view()
 
 #   Temperature     (-20, 50, 0.1).round(1)
-temperature['Very Low'] = fuzz.trapmf(temperature.universe, [-20, -20, -10, 0])
+temperature['Very Low'] = fuzz.trapmf(temperature.universe, [-10, -10, -5, 0])
 temperature['Low'] = fuzz.trimf(temperature.universe, [-5, 7, 15])
 temperature['Medium'] = fuzz.trapmf(temperature.universe, [12, 15, 23, 27])
 temperature['High'] = fuzz.trimf(temperature.universe, [25, 27, 35])
-temperature['Very High'] = fuzz.trapmf(temperature.universe, [30, 40, 50, 50])
+temperature['Very High'] = fuzz.trapmf(temperature.universe, [30, 35, 40, 40])
 
 # temperature.view()
 
@@ -59,7 +59,7 @@ density['High'] = fuzz.trapmf(density.universe, [1025, 1050, 1100, 1100])
 depth['Very Low'] = fuzz.trapmf(depth.universe, [0, 0, 3, 5])
 depth['Low'] = fuzz.trimf(depth.universe, [2, 6, 10])
 depth['Medium'] = fuzz.trimf(depth.universe, [5, 500, 1000])
-depth['High'] = fuzz.trapmf(depth.universe, [800, 1000, 7000, 7000])
+depth['High'] = fuzz.trapmf(depth.universe, [800, 1000, 8000, 8000])
 
 # depth.view()
 
