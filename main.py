@@ -1,7 +1,7 @@
 from GUI import gui
 # from Fuzzy_System import FuzzySystem
 
-gui.gui()
+gui
 
 '''input_salinity = 20
 input_temperature = -20
