@@ -144,9 +144,9 @@ _For more examples, please refer to the [Documentation]()_
 <!-- ROADMAP -->
 ## Roadmap
 
-- [ ] Create English Version
+- [x] Create English Version -> v1.5
   - [ ] Add Change Language (Spanish-English) Button
-- [ ] Add Measure Units to the GUI
+- [x] Add Measure Units to the GUI -> v1.8
   - [ ] Add New possible Measure Units for the user to introduce Input values
 - [ ] Calculate the output with reduced inputs (The other inputs are calculated from those, from salinity we can calculate density)
 - [ ] Add Color Map Selection for Selected Inputs
