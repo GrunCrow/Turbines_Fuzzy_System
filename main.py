@@ -1,17 +1,17 @@
 from GUI import gui
 from Fuzzy_System import FuzzySystem
 
-gui.gui_sin_mapas()
+gui.gui_no_maps()
 
-'''input_salinidad = 20
-input_temperatura = -20
+'''input_salinity = 20
+input_temperature = -20
 input_corriente = 0
-input_altura_laminal = 1
-input_viscosidad = 0.3
-input_densidad = 900
-input_profundidad = 0
-input_profundidad_colocacion = 0
+input_laminal_height = 1
+input_viscosity = 0.3
+input_density = 900
+input_depth = 0
+input_placement_depth = 0
 
-res = FuzzySystem.calcular(input_salinidad, input_temperatura, input_corriente, input_altura_laminal, input_viscosidad, input_densidad, input_profundidad, input_profundidad_colocacion)
+res = FuzzySystem.calculate(input_salinity, input_temperature, input_corriente, input_laminal_height, input_viscosity, input_density, input_depth, input_placement_depth)
 
 print(res)'''

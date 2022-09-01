@@ -1,15 +1,15 @@
 from skfuzzy import control
-from Fuzzy_System.FuzzyRule import r_optima, r_muy_buena, r_buena, r_no_recomendable, r_descartada
-from Fuzzy_System.FuzzyVariable import turbinas
+from Fuzzy_System.FuzzyRule import r_optimal, r_very_good, r_good, r_not_recommendable, r_discarded
+from Fuzzy_System.FuzzyVariable import turbines
 
 
-def calcular(input_salinidad, input_temperatura, input_corrientes, input_altura_laminal, input_viscosidad,
-             input_densidad, input_profundidad, input_profundidad_colocacion):
-    system_control = control.ControlSystem([r_optima,   # tod verde
-                                            r_muy_buena,    # tod verde y un amarillo
-                                            r_buena,    # tod verde y 2 amarillo
-                                            r_no_recomendable,  # 1 nar + 0/1/2 amar / 3 amar + 0/1/2 amar
-                                            r_descartada    # min (1 rojo, 2 naranjas, 1 naranja + 3 amar, 6 amarillos)
+def calculate(input_salinity, input_temperature, input_currents, input_laminal_height, input_viscosity,
+              input_density, input_depth, input_placement_depth):
+    system_control = control.ControlSystem([r_optimal,   # tod verde
+                                            r_very_good,    # tod verde y un amarillo
+                                            r_good,    # tod verde y 2 amarillo
+                                            r_not_recommendable,  # 1 nar + 0/1/2 amar / 3 amar + 0/1/2 amar
+                                            r_discarded    # min (1 rojo, 2 naranjas, 1 naranja + 3 amar, 6 amarillos)
                                             ])
 
     sA = control.ControlSystemSimulation(system_control)
@@ -22,7 +22,7 @@ def calcular(input_salinidad, input_temperatura, input_corrientes, input_altura_
         color = {i: 'white' for i in graph}
         stack = [start]
         visited = []
-        ciclos = False
+        cycles = False
         prev = "Sin valor"
 
         while stack:
@@ -31,14 +31,14 @@ def calcular(input_salinidad, input_temperatura, input_corrientes, input_altura_
                 print(prev)
                 print(vertex)
                 print("============================================================================")
-                ciclos = True
+                cycles = True
             color[vertex] = 'grey'
             visited.append(vertex)
             stack.extend((graph[vertex]))
             if len(graph[vertex]) == 0:
                 color[vertex] = 'black'
             prev = vertex
-        return ciclos
+        return cycles
 
     def cycle_exists(graph):
         for vertex in graph:
@@ -49,25 +49,25 @@ def calcular(input_salinidad, input_temperatura, input_corrientes, input_altura_
     '''if cycle_exists(gr):
         print("Hay ciclos en las reglas")'''
 
-    sA.input['salinidad'] = float(input_salinidad)
-    sA.input['temperatura'] = float(input_temperatura)
-    sA.input['corrientes'] = float(input_corrientes)
-    sA.input['altura_laminal'] = float(input_altura_laminal)
-    sA.input['viscosidad'] = float(input_viscosidad)
-    sA.input['densidad'] = float(input_densidad)
-    sA.input['profundidad'] = float(input_profundidad)
-    sA.input['profundidad_colocacion'] = float(input_profundidad_colocacion)
+    sA.input['salinity'] = float(input_salinity)
+    sA.input['temperature'] = float(input_temperature)
+    sA.input['currents'] = float(input_currents)
+    sA.input['laminal_height'] = float(input_laminal_height)
+    sA.input['viscosity'] = float(input_viscosity)
+    sA.input['density'] = float(input_density)
+    sA.input['depth'] = float(input_depth)
+    sA.input['placement_depth'] = float(input_placement_depth)
 
     sA.compute()
 
     # Resultado en % = res
     res = sA.output
     # resultado = next(iter(res))
-    resultado = next(iter(res.items()))
-    resultado = next(iter(res.values()))
+    result = next(iter(res.items()))
+    result = next(iter(res.values()))
 
     # Visualizar gráfica con donde se encuentran en turbinas los inputs introducidos
-    image_name = 'turbinas_results.png'
-    turbinas.view(image_name, sim=sA)
+    image_name = 'turbines_results.png'
+    turbines.view(image_name, sim=sA)
 
-    return resultado
+    return result
