@@ -1,11 +1,12 @@
 import cv2
-from Color_Maps  import color_recognition as cr
+from Color_Maps import color_recognition as cr
 
 # define image
 
 red = 0
 green = 0
 blue = 0
+
 
 def color_detector(img_name):
     img = cv2.imread(img_name)
@@ -37,12 +38,15 @@ def color_detector(img_name):
             green = cr.g
             blue = cr.b
 
+            # print(red, green, blue)
+            cr.clicked = False
             clicked = True
-
-            return red, green, blue
 
         # Break the loop when user hits 'esc' key
         if cv2.waitKey(20) & 0xFF == 27 or clicked:
+            if clicked:
+                cv2.destroyAllWindows()
+                return red, green, blue
             break
 
     cv2.destroyAllWindows()

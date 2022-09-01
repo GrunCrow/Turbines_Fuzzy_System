@@ -183,7 +183,9 @@ def clear_all():
 
 def map_action():
     # red, green, blue = image_detector.map()
-    color_map.color_map()
+    depth_value = color_map.color_map()
+    textbox_input_depth.delete(0, 'end')
+    textbox_input_depth.insert("end", str(depth_value))
 
 
 #                                              MAIN WINDOW
