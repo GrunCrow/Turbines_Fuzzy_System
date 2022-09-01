@@ -3,6 +3,8 @@ import tkinter.font as font
 from PIL import ImageTk, Image
 
 from Fuzzy_System import FuzzySystem
+from Color_Maps import image_detector
+from Color_Maps import color_map
 
 '''
 Color Palette:
@@ -40,6 +42,7 @@ str_title = "Turbines Fuzzy System Calculator"
 str_error1 = "Parameter value "
 str_error2 = " must be between "
 str_error3 = " and "
+str_map = "Map"
 
 
 def spanish():
@@ -58,6 +61,7 @@ def spanish():
     str_error1 = "Valor del parametro "
     str_error2 = " debe estar entre "
     str_error3 = " y "
+    str_map = "Mapa"
 
 
 def load():
@@ -175,6 +179,11 @@ def clear_results():
 def clear_all():
     clear_textbox()
     clear_results()
+
+
+def map_action():
+    # red, green, blue = image_detector.map()
+    color_map.color_map()
 
 
 #                                              MAIN WINDOW
@@ -344,6 +353,10 @@ button_cfg = font.Font(family='Nunito', size=12)
 button_clear = tk.Button(frame, text=str_clear, fg=color_font, bg=color_main_bg, height=1, width=10, command=clear_all)  # , command=FuzzySystem.calculate()
 button_clear['font'] = button_cfg
 button_clear.grid(row=8, column=3, sticky="sw", pady=10)
+
+button_map = tk.Button(frame, text=str_map, fg=color_font, bg=color_main_bg, height=1, width=10, command=map_action)  # , command=FuzzySystem.calculate()
+button_map['font'] = button_cfg
+button_map.grid(row=8, column=3, padx=15, pady=10)
 
 button_calculate = tk.Button(frame, text=str_calculate, fg=color_font, bg=color_main_bg, height=1, width=10, command=calculate)  # , command=FuzzySystem.calculate()
 button_calculate['font'] = button_cfg
