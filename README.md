@@ -80,11 +80,9 @@
 
 
 <!-- ABOUT THE PROJECT -->
-## About The Project
+## About The Fuzzy Inference System
 
-[![Product Name Screen Shot][product-screenshot]](https://example.com)
-
-Here's a blank template to get started: To avoid retyping too much info. Do a search and replace with your text editor for the following: `github_username`, `repo_name`, `twitter_handle`, `linkedin_username`, `email_client`, `email`, `project_title`, `project_description`
+[![Product Name Screen Shot][product-screenshot]]() <!-- (https://example.com) -->
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -92,14 +90,12 @@ Here's a blank template to get started: To avoid retyping too much info. Do a se
 
 ### Built With
 
-* [![Next][Next.js]][Next-url]
-* [![React][React.js]][React-url]
-* [![Vue][Vue.js]][Vue-url]
-* [![Angular][Angular.io]][Angular-url]
-* [![Svelte][Svelte.dev]][Svelte-url]
-* [![Laravel][Laravel.com]][Laravel-url]
-* [![Bootstrap][Bootstrap.com]][Bootstrap-url]
-* [![JQuery][JQuery.com]][JQuery-url]
+* [![Python][Python.com]][Python-url]
+* [![Scikit-Fuzzy][Scikit-Fuzzy.com]][Scikit-Fuzzy-url]
+* [![MatPlotLib][MatPlotLib.com]][MatPlotLib-url]
+* [![Numpy][Numpy.com]][Numpy-url]
+* [![Tkinter][Tkinter.com]][Tkinter-url]
+
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -148,10 +144,12 @@ _For more examples, please refer to the [Documentation]()_
 <!-- ROADMAP -->
 ## Roadmap
 
-- [ ] Feature 1
-- [ ] Feature 2
-- [ ] Feature 3
-    - [ ] Nested Feature
+- [ ] Create English Version
+  - [ ] Add Change Language (Spanish-English) Button
+- [ ] Add Measure Units to the GUI
+  - [ ] Add New possible Measure Units for the user to introduce Input values
+- [ ] Calculate the output with reduced inputs (The other inputs are calculated from those, from salinity we can calculate density)
+- [ ] Add Color Map Selection for Selected Inputs
 
 See the [open issues](https://github.com/GrunCrow/Turbines_Fuzzy_System/issues) for a full list of proposed features (and known issues).
 
@@ -189,7 +187,7 @@ Don't forget to give the project a star! Thanks again!
 <!-- CONTACT -->
 ## Contact
 
-GrunCrow - [@gruncrow](https://twitter.com/GrunCrow) - email@email_client.com
+GrunCrow - [@gruncrow](https://twitter.com/GrunCrow) <!-- - email@email_client.com -->
 
 Project Link: [https://github.com/GrunCrow/Turbines_Fuzzy_System](https://github.com/github_username/repo_name)
 
@@ -239,3 +237,14 @@ Project Link: [https://github.com/GrunCrow/Turbines_Fuzzy_System](https://github
 [Bootstrap-url]: https://getbootstrap.com
 [JQuery.com]: https://img.shields.io/badge/jQuery-0769AD?style=for-the-badge&logo=jquery&logoColor=white
 [JQuery-url]: https://jquery.com 
+
+[Python.com]: https://img.shields.io/badge/Python-0769AD?style=for-the-badge&logo=python&logoColor=ffd748
+[Python-url]: https://www.python.org
+[Scikit-Fuzzy.com]: https://img.shields.io/badge/ScikitFuzzy-01018c?style=for-the-badge&logo=python&logoColor=white
+[Scikit-Fuzzy-url]: https://pythonhosted.org/scikit-fuzzy/overview.html
+[MatPlotLib.com]: https://img.shields.io/badge/MatPlotLib-11557c?style=for-the-badge&logo=circle&logoColor=white
+[MatPlotLib-url]: https://matplotlib.org
+[Numpy.com]: https://img.shields.io/badge/Numpy-4d77cf?style=for-the-badge&logo=numpy&logoColor=4dabcf
+[Numpy-url]: https://numpy.org
+[Tkinter.com]: https://img.shields.io/badge/Tkinter-ffd748?style=for-the-badge&logo=python&logoColor=0769AD
+[Tkinter-url]: https://docs.python.org/3/library/tkinter.html

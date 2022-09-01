@@ -56,18 +56,18 @@ densidad['Alta'] = fuzz.trapmf(densidad.universe, [1025, 1050, 1100, 1100])
 # densidad.view()
 
 #   profundidad     (0, 7000)
-profundidad['Muy Baja'] = fuzz.trapmf(profundidad.universe, [0, 0, 500, 1000])
-profundidad['Baja'] = fuzz.trimf(profundidad.universe, [500, 1250, 2000])
-profundidad['Media'] = fuzz.trimf(profundidad.universe, [1500, 3500, 5500])
-profundidad['Alta'] = fuzz.trapmf(profundidad.universe, [4500, 6000, 7000, 7000])
+profundidad['Muy Baja'] = fuzz.trapmf(profundidad.universe, [0, 0, 3, 5])
+profundidad['Baja'] = fuzz.trimf(profundidad.universe, [2, 6, 10])
+profundidad['Media'] = fuzz.trimf(profundidad.universe, [5, 500, 1000])
+profundidad['Alta'] = fuzz.trapmf(profundidad.universe, [800, 1000, 7000, 7000])
 
 # profundidad.view()
 
 #   profundidad colocacion     (0, 150)
-profundidad_colocacion['Muy Baja'] = fuzz.trapmf(profundidad_colocacion.universe, [0, 0, 5, 15])
-profundidad_colocacion['Baja'] = fuzz.trimf(profundidad_colocacion.universe, [15, 20, 35])
-profundidad_colocacion['Media'] = fuzz.trimf(profundidad_colocacion.universe, [30, 70, 120])
-profundidad_colocacion['Alta'] = fuzz.trapmf(profundidad_colocacion.universe, [100, 125, 125, 150])
+profundidad_colocacion['Muy Baja'] = fuzz.trapmf(profundidad_colocacion.universe, [0, 0, 1, 2])
+profundidad_colocacion['Baja'] = fuzz.trimf(profundidad_colocacion.universe, [1, 3, 5])
+profundidad_colocacion['Media'] = fuzz.trimf(profundidad_colocacion.universe, [3, 10, 20])
+profundidad_colocacion['Alta'] = fuzz.trapmf(profundidad_colocacion.universe, [20, 50, 150, 150])
 
 # profundidad_colocacion.view()
 
