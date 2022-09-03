@@ -1,66 +1,51 @@
 import pandas as pd
 import cv2
 
-
-# teach the colours -> take csv file from github and load, add the columns name
-# (https://github.com/codebrainz/color-names/blob/master/output/colors.csv)
-index = ["color", "color_name", "hex", "R", "G", "B"]
-csv = pd.read_csv('Color_Maps/colors.csv', names=index, header=None)
-
 # global variables
 clicked = False
-r = g = b = x_pos = y_pos = 0
-played = True
-color_rec = 'Black'
+moving = False
+depth_r = depth_g = depth_b = temperature_r = temperature_g = temperature_b = x_pos = y_pos = 0
 
 # default image
-img = cv2.imread("Color_Maps/maps/sea_depth.jpg")
-
-
-def recognize_color(red, green, blue):
-    minimum = 10000
-    c_name = "none"
-    for i in range(len(csv)):
-        d = abs(red - int(csv.loc[i, "R"])) + abs(green - int(csv.loc[i, "G"])) + abs(blue - int(csv.loc[i, "B"]))
-        if d <= minimum:
-            minimum = d
-            c_name = csv.loc[i, "color_name"]
-    return c_name
-
-
-def load_img(image):
-    img = image
-
-
-# mouse click function
-def double_click(event, x, y, flags, param):
-    if event == cv2.EVENT_LBUTTONDBLCLK:
-        global b, g, r, x_pos, y_pos, clicked
-        clicked = True
-        x_pos = x
-        y_pos = y
-        b, g, r = img[y, x]
-        b = int(b)
-        g = int(g)
-        r = int(r)
+# depth_map = cv2.imread("Color_Maps/maps/sea_depth.jpg")
+depth_map = cv2.imread("Color_Maps/maps/sea_depth.jpg")
+temperature_map = cv2.imread("Color_Maps/maps/sea_surface_temperature.jpg")
 
 
 def single_click(event, x, y, flags, param):
     if event == cv2.EVENT_LBUTTONDOWN:
-        global b, g, r, x_pos, y_pos, clicked
+        global depth_b, depth_g, depth_r, temperature_b, temperature_g, temperature_r, x_pos, y_pos, clicked
         clicked = True
         x_pos = x
         y_pos = y
-        b, g, r = img[y, x]
-        b = int(b)
-        g = int(g)
-        r = int(r)
+
+        depth_b, depth_g, depth_r = depth_map[y, x]
+        temperature_b, temperature_g, temperature_r = temperature_map[y, x]
+
+        depth_b = int(depth_b)
+        depth_g = int(depth_g)
+        depth_r = int(depth_r)
+
+        temperature_b = int(temperature_b)
+        temperature_g = int(temperature_g)
+        temperature_r = int(temperature_r)
+
+        # print("Depth = " + str(depth_r) + " " + str(depth_g) + " " + str(depth_b))
+        # print("Temperature = " + str(temperature_r) + " " + str(temperature_g) + " " + str(temperature_b))
 
 
 # function for detecting left mouse click
 def click(event, x, y, flags, param):
-    global clicked, b, g, r, x_pos, y_pos
+    global clicked, x_pos, y_pos
     if event == cv2.EVENT_LBUTTONDOWN:
         x_pos = x
         y_pos = y
         clicked = True
+
+
+def coordinates(event, x, y, flags, param):
+    if event == cv2.EVENT_MOUSEMOVE:
+        global x_pos, y_pos, moving
+        x_pos = x
+        y_pos = y
+        moving = True

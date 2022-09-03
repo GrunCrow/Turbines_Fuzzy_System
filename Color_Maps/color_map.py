@@ -1,8 +1,7 @@
 from Color_Maps import image_detector
 
 
-def set_depth(depth_red, depth_green, depth_blue):
-    # 245 250 254 to 185 214 232
+def get_depth(depth_red, depth_green, depth_blue):
     depth = 8000
     if depth_red == 0 & depth_green == 0 & depth_blue == 0:
         depth = 0
@@ -31,19 +30,63 @@ def set_depth(depth_red, depth_green, depth_blue):
     elif depth_red < 255 & depth_green < 255 & depth_blue < 255:  # 0
         depth = 50
 
-    print(depth)
     return depth
+
+
+def get_temperature(temperature_red, temperature_green, temperature_blue):
+    temperature = 0
+
+    if (temperature_red == 0) & (temperature_green == 0) & (temperature_blue == 0):
+        temperature = 40
+    elif (temperature_red <= 16) & (temperature_green <= 20) & (temperature_blue <= 88):
+        temperature = -5
+    elif (temperature_red <= 17) & (temperature_green <= 26) & (temperature_blue <= 92):
+        temperature = 2
+    elif (temperature_red <= 32) & (temperature_green <= 43) & (temperature_blue <= 114):  # 7000
+        temperature = 4
+    elif (temperature_red <= 48) & (temperature_green <= 53) & (temperature_blue <= 128):  # 6000
+        temperature = 6
+    elif (temperature_red <= 64) & (temperature_green <= 64) & (temperature_blue <= 140):  # 5000
+        temperature = 8
+    elif (temperature_red <= 85) & (temperature_green <= 71) & (temperature_blue <= 143):  # 4000
+        temperature = 10
+    elif (temperature_red <= 108) & (temperature_green <= 82) & (temperature_blue <= 147):  # 3000
+        temperature = 12
+    elif (temperature_red <= 132) & (temperature_green <= 91) & (temperature_blue <= 150):  # 2000
+        temperature = 15
+    elif (temperature_red <= 155) & (temperature_green <= 101) & (temperature_blue <= 153):  # 1000
+        temperature = 17
+    elif (temperature_red <= 166) & (temperature_green <= 108) & (temperature_blue <= 147):  # 500
+        temperature = 20
+    elif (temperature_red <= 178) & (temperature_green <= 115) & (temperature_blue <= 144):  # 250
+        temperature = 22
+    elif (temperature_red <= 191) & (temperature_green <= 125) & (temperature_blue <= 138):  # 125
+        temperature = 24
+    elif (temperature_red <= 205) & (temperature_green <= 136) & (temperature_blue <= 135):  # 0
+        temperature = 26
+    elif (temperature_red <= 218) & (temperature_green <= 161) & (temperature_blue <= 152):  # 0
+        temperature = 28
+    elif (temperature_red <= 230) & (temperature_green <= 189) & (temperature_blue <= 170):  # 0
+        temperature = 30
+    elif (temperature_red <= 245) & (temperature_green <= 218) & (temperature_blue <= 188):  # 0
+        temperature = 32
+    elif (temperature_red <= 255) & (temperature_green <= 244) & (temperature_blue <= 207):  # 0
+        temperature = 35
+
+    return temperature
+
 
 def color_map():
-    # file = "Color_Maps/maps/sea_depth.jpg"
     file = "Color_Maps/maps/sea_depth.jpg"
-    depth_red, depth_green, depth_blue = image_detector.color_detector(file)
 
-    depth = set_depth(depth_red, depth_green, depth_blue)
+    depth_red, depth_green, depth_blue, temperature_red, temperature_green, temperature_blue =\
+        image_detector.color_detector(file)
 
-    return depth
+    depth = get_depth(depth_red, depth_green, depth_blue)
 
-    # print(depth_red, depth_green, depth_blue)
+    temperature = get_temperature(temperature_red, temperature_green, temperature_blue)
+
+    return depth, temperature
 
 
 

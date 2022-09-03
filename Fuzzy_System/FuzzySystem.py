@@ -15,7 +15,7 @@ def calculate(input_salinity, input_temperature, input_currents, input_laminar_h
     simulation = control.ControlSystemSimulation(system_control)
 
     # Display graph of the rules to check for cycles, it is a Digraph
-    system_control.view()
+    # system_control.view()
     # gr = system_control.graph
 
     def dfs(graph, start):

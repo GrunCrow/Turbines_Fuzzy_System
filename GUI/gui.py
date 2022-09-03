@@ -183,9 +183,15 @@ def clear_all():
 
 def map_action():
     # red, green, blue = image_detector.map()
-    depth_value = color_map.color_map()
+    depth_value, temperature_value = color_map.color_map()
+
+    # Change depth value
     textbox_input_depth.delete(0, 'end')
     textbox_input_depth.insert("end", str(depth_value))
+
+    # Change temperature Value
+    textbox_input_temperature.delete(0, 'end')
+    textbox_input_temperature.insert("end", str(temperature_value))
 
 
 #                                              MAIN WINDOW
