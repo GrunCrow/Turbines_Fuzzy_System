@@ -6,7 +6,6 @@ gui.gui()
 '''input_salinity = 20
 input_temperature = -20
 input_corriente = 0
-input_laminar_height = 1
 input_viscosity = 0.3
 input_density = 900
 input_depth = 0

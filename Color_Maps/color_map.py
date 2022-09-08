@@ -1,5 +1,6 @@
 from Color_Maps import image_detector
 
+# TODO if black in the map -> error, black = 255 255 255
 
 def get_depth(depth_red, depth_green, depth_blue):
     depth = 8000

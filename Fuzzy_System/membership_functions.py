@@ -1,4 +1,4 @@
-from Fuzzy_System.FuzzyVariable import salinity, temperature, currents, laminar_height, viscosity, density, depth, \
+from Fuzzy_System.FuzzyVariable import salinity, temperature, currents, viscosity, density, depth, \
     placement_depth, turbines
 import skfuzzy as fuzz
 
@@ -30,14 +30,6 @@ currents['Medium'] = fuzz.trimf(currents.universe, [170, 200, 220])
 currents['High'] = fuzz.trapmf(currents.universe, [210, 255, 300, 300])
 
 # currents.view()
-
-#   Laminar Height   (0, 100)
-laminar_height['Very Low'] = fuzz.trapmf(laminar_height.universe, [0, 0, 10, 25])
-laminar_height['Low'] = fuzz.trimf(laminar_height.universe, [20, 30, 45])
-laminar_height['Medium'] = fuzz.trimf(laminar_height.universe, [40, 50, 70])
-laminar_height['High'] = fuzz.trapmf(laminar_height.universe, [60, 80, 100, 100])
-
-# laminar_height.view()
 
 #   viscosity     (0, 2, 0.01)
 viscosity['Very Low'] = fuzz.trapmf(viscosity.universe, [0.3, 0.3, 0.4, 0.70])
