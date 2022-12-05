@@ -1,5 +1,5 @@
 from skfuzzy import control
-from Fuzzy_System.membership_functions import salinity, temperature, currents, viscosity, density, \
+from Turbines_Fuzzy_System.Fuzzy_System.membership_functions import salinity, temperature, currents, viscosity, density, \
     depth, placement_depth, turbines
 
 '''

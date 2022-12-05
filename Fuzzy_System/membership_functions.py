@@ -1,4 +1,4 @@
-from Fuzzy_System.FuzzyVariable import salinity, temperature, currents, viscosity, density, depth, \
+from Turbines_Fuzzy_System.Fuzzy_System.FuzzyVariable import salinity, temperature, currents, viscosity, density, depth, \
     placement_depth, turbines
 import skfuzzy as fuzz
 
@@ -12,7 +12,7 @@ salinity['Low'] = fuzz.trapmf(salinity.universe, [20, 20, 26, 33])
 salinity['Medium'] = fuzz.trapmf(salinity.universe, [30, 33, 37, 40])
 salinity['High'] = fuzz.trapmf(salinity.universe, [37, 45, 50, 50])
 
-# salinity.view()
+salinity.view()
 
 #   Temperature     (-20, 50, 0.1).round(1)
 temperature['Very Low'] = fuzz.trapmf(temperature.universe, [-10, -10, -5, 0])
@@ -21,7 +21,7 @@ temperature['Medium'] = fuzz.trapmf(temperature.universe, [12, 15, 23, 27])
 temperature['High'] = fuzz.trimf(temperature.universe, [25, 27, 35])
 temperature['Very High'] = fuzz.trapmf(temperature.universe, [30, 35, 40, 40])
 
-# temperature.view()
+temperature.view()
 
 #   currents     (0, 300)
 currents['Very Low'] = fuzz.trapmf(currents.universe, [0, 0, 50, 100])
@@ -29,7 +29,7 @@ currents['Low'] = fuzz.trimf(currents.universe, [70, 130, 180])
 currents['Medium'] = fuzz.trimf(currents.universe, [170, 200, 220])
 currents['High'] = fuzz.trapmf(currents.universe, [210, 255, 300, 300])
 
-# currents.view()
+currents.view()
 
 #   viscosity     (0, 2, 0.01)
 viscosity['Very Low'] = fuzz.trapmf(viscosity.universe, [0.3, 0.3, 0.4, 0.70])
@@ -37,7 +37,7 @@ viscosity['Low'] = fuzz.trimf(viscosity.universe, [0.50, 0.85, 1.10])
 viscosity['Medium'] = fuzz.trimf(viscosity.universe, [1.00, 1.55, 1.90])
 viscosity['High'] = fuzz.trapmf(viscosity.universe, [1.75, 1.95, 2, 2])
 
-# viscosity.view()
+viscosity.view()
 
 #   density     (900, 1100)
 density['Very Low'] = fuzz.trapmf(density.universe, [900, 900, 925, 950])
@@ -45,7 +45,7 @@ density['Low'] = fuzz.trimf(density.universe, [925, 950, 975])
 density['Medium'] = fuzz.trimf(density.universe, [950, 1000, 1050])
 density['High'] = fuzz.trapmf(density.universe, [1025, 1050, 1100, 1100])
 
-# density.view()
+density.view()
 
 #   depth     (0, 7000)
 depth['Very Low'] = fuzz.trapmf(depth.universe, [0, 0, 3, 5])
@@ -53,7 +53,7 @@ depth['Low'] = fuzz.trimf(depth.universe, [2, 6, 10])
 depth['Medium'] = fuzz.trimf(depth.universe, [5, 500, 1000])
 depth['High'] = fuzz.trapmf(depth.universe, [800, 1000, 8000, 8000])
 
-# depth.view()
+depth.view()
 
 #   placement depth     (0, 150)
 placement_depth['Very Low'] = fuzz.trapmf(placement_depth.universe, [0, 0, 1, 2])
@@ -61,7 +61,7 @@ placement_depth['Low'] = fuzz.trimf(placement_depth.universe, [1, 3, 5])
 placement_depth['Medium'] = fuzz.trimf(placement_depth.universe, [3, 10, 20])
 placement_depth['High'] = fuzz.trapmf(placement_depth.universe, [20, 50, 150, 150])
 
-# placement_depth.view()
+placement_depth.view()
 
 #                                                                           OUTPUTS
 

@@ -1,4 +1,4 @@
-from Color_Maps import image_detector
+from Turbines_Fuzzy_System.Color_Maps import image_detector
 
 # TODO if black in the map -> error, black = 255 255 255
 

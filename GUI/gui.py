@@ -2,8 +2,8 @@ import tkinter as tk
 import tkinter.font as font
 from PIL import ImageTk, Image
 
-from Fuzzy_System import FuzzySystem
-from Color_Maps import color_map
+from Turbines_Fuzzy_System.Fuzzy_System import FuzzySystem
+from Turbines_Fuzzy_System.Color_Maps import color_map
 
 '''
 Color Palette:

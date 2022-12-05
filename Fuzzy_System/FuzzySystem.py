@@ -1,6 +1,6 @@
 from skfuzzy import control
-from Fuzzy_System.FuzzyRule import r_optimal, r_very_good, r_good, r_not_recommendable, r_discarded
-from Fuzzy_System.FuzzyVariable import turbines
+from Turbines_Fuzzy_System.Fuzzy_System.FuzzyRule import r_optimal, r_very_good, r_good, r_not_recommendable, r_discarded
+from Turbines_Fuzzy_System.Fuzzy_System.FuzzyVariable import turbines
 
 
 def calculate(input_salinity, input_temperature, input_currents, input_viscosity,
@@ -69,6 +69,6 @@ def calculate(input_salinity, input_temperature, input_currents, input_viscosity
 
     # Visualize graph with where the inputs entered are found in turbines
     image_name = 'turbines_results.png'
-    turbines.view(image_name, sim=simulation)
+    turbines.view_with_image_name(image_name, sim=simulation)
 
     return result
