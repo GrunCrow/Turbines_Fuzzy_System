@@ -63,7 +63,7 @@ placement_depth['High'] = fuzz.trapmf(placement_depth.universe, [20, 50, 150, 15
 
 placement_depth.view()
 
-#                                                                           OUTPUTS
+#                                                                     OUTPUTS
 
 #   turbine 0-100 %
 turbines['Discarded'] = fuzz.trapmf(turbines.universe, [0, 0, 30, 50])

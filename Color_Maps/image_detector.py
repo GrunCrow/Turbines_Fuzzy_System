@@ -1,5 +1,6 @@
 import cv2
 from Color_Maps import color_recognition as cr
+# import color_recognition as cr
 
 # define image
 
@@ -32,7 +33,9 @@ def zoom_at(img, zoom, coord=None):
 
 
 def color_detector(img):
+    # read img with the library
     image = cv2.imread(img)
+    # create a copy of the img to show
     overlay = image.copy()
 
     # cv2.resize(img, (0, 0), fx=0.99, fy=0.99)
