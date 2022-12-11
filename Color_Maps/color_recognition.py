@@ -3,27 +3,42 @@ import cv2
 # global variables
 clicked = False
 moving = False
-depth_r = depth_g = depth_b = temperature_r = temperature_g = temperature_b = x_pos = y_pos = 0
+salinity_b = salinity_g = salinity_r = \
+    current_b = current_g = current_r = \
+    temperature_r = temperature_g = temperature_b = \
+    x_pos = y_pos = 0
 
-# default image
-# depth_map = cv2.imread("Color_Maps/maps/sea_depth.jpg")
-depth_map = cv2.imread("Color_Maps/maps/sea_depth.jpg")
-temperature_map = cv2.imread("Color_Maps/maps/sea_surface_temperature.jpg")
+# Images from where the colour will be read
+current_map = cv2.imread("Color_Maps/maps/cur_spd_cropped_bw.png")
+salinity_map = cv2.imread("Color_Maps/maps/sal_cropped_bw.png")
+temperature_map = cv2.imread("Color_Maps/maps/sst_cropped_bw.png")
 
 
 def single_click(event, x, y, flags, param):
     if event == cv2.EVENT_LBUTTONDOWN:
-        global depth_b, depth_g, depth_r, temperature_b, temperature_g, temperature_r, x_pos, y_pos, clicked
+        global salinity_b, salinity_g, salinity_r, \
+            current_b, current_g, current_r, \
+            temperature_b, temperature_g, temperature_r, x_pos, y_pos, clicked
         clicked = True
         x_pos = x
         y_pos = y
 
-        depth_b, depth_g, depth_r = depth_map[y, x]
+        # depth_b, depth_g, depth_r = depth_map[y, x]
+        salinity_b, salinity_g, salinity_r = salinity_map[y, x]
+        current_b, current_g, current_r = current_map[y, x]
         temperature_b, temperature_g, temperature_r = temperature_map[y, x]
 
-        depth_b = int(depth_b)
+        '''depth_b = int(depth_b)
         depth_g = int(depth_g)
-        depth_r = int(depth_r)
+        depth_r = int(depth_r)'''
+
+        salinity_b = int(salinity_b)
+        salinity_g = int(salinity_g)
+        salinity_r = int(salinity_r)
+
+        current_b = int(current_b)
+        current_g = int(current_g)
+        current_r = int(current_r)
 
         temperature_b = int(temperature_b)
         temperature_g = int(temperature_g)

@@ -1,93 +1,154 @@
 from Turbines_Fuzzy_System.Color_Maps import image_detector
 
-# TODO if black in the map -> error, black = 255 255 255
+'''
+Functions to get the value of the parameter depending of the RGB value where the user has clicked
+'''
 
-def get_depth(depth_red, depth_green, depth_blue):
-    depth = 8000
-    if depth_red == 0 & depth_green == 0 & depth_blue == 0:
-        depth = 0
-    elif depth_red <= 8 & depth_green <= 50 & depth_blue <= 110:
-        depth = 8000
-    elif depth_red <= 9 & depth_green <= 82 & depth_blue <= 157:  # 7000
-        depth = 7000
-    elif depth_red <= 34 & depth_green <= 114 & depth_blue <= 182:  # 6000
-        depth = 6000
-    elif depth_red <= 66 & depth_green <= 146 & depth_blue <= 198:  # 5000
-        depth = 5000
-    elif depth_red <= 109 & depth_green <= 175 & depth_blue <= 214:  # 4000
-        depth = 4000
-    elif depth_red <= 161 & depth_green <= 203 & depth_blue <= 226:  # 3000
-        depth = 3000
-    elif depth_red <= 199 & depth_green <= 220 & depth_blue <= 240:  # 2000
-        depth = 2000
-    elif depth_red <= 224 & depth_green <= 236 & depth_blue <= 248:  # 1000
-        depth = 1000
-    elif depth_red <= 236 & depth_green <= 244 & depth_blue <= 252:  # 500
-        depth = 500
-    elif depth_red <= 242 & depth_green <= 248 & depth_blue <= 254:  # 250
-        depth = 250
-    elif depth_red <= 245 & depth_green <= 250 & depth_blue <= 255:  # 125
-        depth = 125
-    elif depth_red < 255 & depth_green < 255 & depth_blue < 255:  # 0
-        depth = 50
+# current in knots firstly and then changed to cm/s
+def get_current(current_red, current_green, current_blue):
+    current = -1000
 
-    return depth
+    if (current_red == 192) & (current_green == 192) & (current_blue == 192):
+        current = -2000
+    elif current_red == 2 & current_green == 2 & current_blue == 2:
+        current = 0
+    elif current_red <= 28 & current_green <= 28 & current_blue <= 28:  # 7000
+        current = 0.25
+    elif current_red <= 52 & current_green <= 52 & current_blue <= 52:  # 6000
+        current = 0.5
+    elif current_red <= 79 & current_green <= 79 & current_blue <= 79:  # 5000
+        current = 0.75
+    elif current_red <= 101 & current_green <= 101 & current_blue <= 101:  # 4000
+        current = 1
+    elif current_red <= 112 & current_green <= 112 & current_blue <= 112:  # 3000
+        current = 1.25
+    elif current_red <= 119 & current_green <= 119 & current_blue <= 119:  # 2000
+        current = 1.5
+    elif current_red <= 126 & current_green <= 126 & current_blue <= 126:  # 1000
+        current = 1.75
+    elif current_red <= 134 & current_green <= 134 & current_blue <= 134:  # 500
+        current = 2
+    elif current_red <= 138 & current_green <= 138 & current_blue <= 138:  # 125
+        current = 2.5
+    elif current_red <= 141 & current_green <= 141 & current_blue <= 141:  # 125
+        current = 3
+    elif current_red <= 147 & current_green <= 147 & current_blue <= 147:  # 125
+        current = 3.5
+    elif current_red <= 154 & current_green <= 154 & current_blue <= 154:  # 125
+        current = 4
+    elif current_red <= 157 & current_green <= 157 & current_blue <= 157:  # 125
+        current = 4.5
+    elif current_red <= 160 & current_green <= 160 & current_blue <= 160:  # 125
+        current = 5
+    '''elif current_red < 255 & current_green < 255 & current_blue < 255:  # 0
+        current = 0'''
 
+    # from knot to cm/s
+    if current > 0:
+        current *= 51.4444
 
+    return round(current, 2)
+
+# ERRORS:
+    # if salinity = -1000 -> no value founded
+    # else if salinity = -2000 -> clicked on the ground -> not possible as turbine need to be placed at the sea/ocean
+def get_salinity(salinity_red, salinity_green, salinity_blue):
+    salinity = -1000
+
+    if (salinity_red == 192) & (salinity_green == 192) & (salinity_blue == 192):
+        salinity = -2000
+    elif (salinity_red <= 28) & (salinity_green <= 28) & (salinity_blue <= 28):
+        salinity = 0
+    elif (salinity_red <= 38) & (salinity_green <= 38) & (salinity_blue <= 38):  # 7000
+        salinity = 2.5
+    elif (salinity_red <= 48) & (salinity_green <= 48) & (salinity_blue <= 48):  # 6000
+        salinity = 5
+    elif (salinity_red <= 58) & (salinity_green <= 58) & (salinity_blue <= 58):  # 5000
+        salinity = 7.5
+    elif (salinity_red <= 64) & (salinity_green <= 64) & (salinity_blue <= 64):  # 4000
+        salinity = 10
+    elif (salinity_red <= 70) & (salinity_green <= 70) & (salinity_blue <= 70):  # 3000
+        salinity = 15
+    elif (salinity_red <= 103) & (salinity_green <= 103) & (salinity_blue <= 103):  # 2000
+        salinity = 20
+    elif (salinity_red <= 108) & (salinity_green <= 108) & (salinity_blue <= 108):  # 1000
+        salinity = 22.5
+    elif (salinity_red <= 113) & (salinity_green <= 113) & (salinity_blue <= 113):  # 500
+        salinity = 25
+    elif (salinity_red <= 118) & (salinity_green <= 118) & (salinity_blue <= 118):  # 250
+        salinity = 27.5
+    elif (salinity_red <= 123) & (salinity_green <= 123) & (salinity_blue <= 123):  # 125
+        salinity = 30
+    elif (salinity_red <= 145) & (salinity_green <= 145) & (salinity_blue <= 145):  # 0
+        salinity = 32.5
+    elif (salinity_red <= 180) & (salinity_green <= 180) & (salinity_blue <= 180):  # 0
+        salinity = 35
+    elif (salinity_red <= 255) & (salinity_green <= 244) & (salinity_blue <= 207):  # 0
+        salinity = -1000
+
+    return salinity
+
+# ERRORS:
+    # if temperature = -1000 -> no value founded
+    # else if temperature = -2000 -> clicked on the ground -> not possible as turbine need to be placed at the sea/ocean
 def get_temperature(temperature_red, temperature_green, temperature_blue):
-    temperature = 0
+    temperature = -1000
 
-    if (temperature_red == 0) & (temperature_green == 0) & (temperature_blue == 0):
-        temperature = 40
-    elif (temperature_red <= 16) & (temperature_green <= 20) & (temperature_blue <= 88):
-        temperature = -5
-    elif (temperature_red <= 17) & (temperature_green <= 26) & (temperature_blue <= 92):
-        temperature = 2
-    elif (temperature_red <= 32) & (temperature_green <= 43) & (temperature_blue <= 114):  # 7000
-        temperature = 4
-    elif (temperature_red <= 48) & (temperature_green <= 53) & (temperature_blue <= 128):  # 6000
-        temperature = 6
-    elif (temperature_red <= 64) & (temperature_green <= 64) & (temperature_blue <= 140):  # 5000
-        temperature = 8
-    elif (temperature_red <= 85) & (temperature_green <= 71) & (temperature_blue <= 143):  # 4000
+    if (temperature_red == 192) & (temperature_green == 192) & (temperature_blue == 192):
+        temperature = -2000
+    elif (temperature_red <= 0) & (temperature_green <= 0) & (temperature_blue <= 0):
+        temperature = 0
+    elif (temperature_red <= 3) & (temperature_green <= 3) & (temperature_blue <= 3):
         temperature = 10
-    elif (temperature_red <= 108) & (temperature_green <= 82) & (temperature_blue <= 147):  # 3000
-        temperature = 12
-    elif (temperature_red <= 132) & (temperature_green <= 91) & (temperature_blue <= 150):  # 2000
+    elif (temperature_red <= 10) & (temperature_green <= 10) & (temperature_blue <= 10):  # 7000
+        temperature = 12.5
+    elif (temperature_red <= 45) & (temperature_green <= 45) & (temperature_blue <= 45):  # 6000
         temperature = 15
-    elif (temperature_red <= 155) & (temperature_green <= 101) & (temperature_blue <= 153):  # 1000
-        temperature = 17
-    elif (temperature_red <= 166) & (temperature_green <= 108) & (temperature_blue <= 147):  # 500
+    elif (temperature_red <= 61) & (temperature_green <= 61) & (temperature_blue <= 61):  # 5000
+        temperature = 17.5
+    elif (temperature_red <= 70) & (temperature_green <= 70) & (temperature_blue <= 70):  # 4000
         temperature = 20
-    elif (temperature_red <= 178) & (temperature_green <= 115) & (temperature_blue <= 144):  # 250
-        temperature = 22
-    elif (temperature_red <= 191) & (temperature_green <= 125) & (temperature_blue <= 138):  # 125
-        temperature = 24
-    elif (temperature_red <= 205) & (temperature_green <= 136) & (temperature_blue <= 135):  # 0
-        temperature = 26
-    elif (temperature_red <= 218) & (temperature_green <= 161) & (temperature_blue <= 152):  # 0
-        temperature = 28
-    elif (temperature_red <= 230) & (temperature_green <= 189) & (temperature_blue <= 170):  # 0
+    elif (temperature_red <= 76) & (temperature_green <= 76) & (temperature_blue <= 76):  # 3000
+        temperature = 22.5
+    elif (temperature_red <= 86) & (temperature_green <= 86) & (temperature_blue <= 86):  # 2000
+        temperature = 25
+    elif (temperature_red <= 98) & (temperature_green <= 98) & (temperature_blue <= 98):  # 1000
+        temperature = 27.5
+    elif (temperature_red <= 113) & (temperature_green <= 113) & (temperature_blue <= 113):  # 500
         temperature = 30
-    elif (temperature_red <= 245) & (temperature_green <= 218) & (temperature_blue <= 188):  # 0
-        temperature = 32
-    elif (temperature_red <= 255) & (temperature_green <= 244) & (temperature_blue <= 207):  # 0
+    elif (temperature_red <= 127) & (temperature_green <= 127) & (temperature_blue <= 127):  # 250
+        temperature = 32.5
+    elif (temperature_red <= 147) & (temperature_green <= 147) & (temperature_blue <= 147):  # 125
         temperature = 35
+    elif (temperature_red <= 164) & (temperature_green <= 164) & (temperature_blue <= 164):  # 0
+        temperature = 37.5
+    elif (temperature_red <= 184) & (temperature_green <= 184) & (temperature_blue <= 184):  # 0
+        temperature = 40
 
     return temperature
 
 
 def color_map():
-    file = "Color_Maps/maps/sea_depth.jpg"
+    # file = "Color_Maps/maps/sea_depth.jpg"
+    file = "Color_Maps/maps/sal_cropped.png"
 
-    depth_red, depth_green, depth_blue, temperature_red, temperature_green, temperature_blue =\
+    salinity_red, salinity_green, salinity_blue,\
+    current_red, current_green, current_blue,\
+    temperature_red, temperature_green, temperature_blue =\
         image_detector.color_detector(file)
 
-    depth = get_depth(depth_red, depth_green, depth_blue)
+    salinity = get_salinity(salinity_red, salinity_green, salinity_blue)
+    print("SALINITY \nRed: " + str(salinity_red) + "\nGreen: " + str(salinity_green) + "\nBlue: " + str(salinity_blue) + "\n")
+
+    current = get_current(current_red, current_green, current_blue)
+    print("CURRENT \nRed: " + str(current_red) + "\nGreen: " + str(current_green) + "\nBlue: " + str(current_blue) + "\n")
 
     temperature = get_temperature(temperature_red, temperature_green, temperature_blue)
+    print("TEMPERATURE \nRed: " + str(temperature_red) + "\nGreen: " + str(temperature_green) + "\nBlue: " + str(temperature_blue) + "\n")
 
-    return depth, temperature
+    # depth = get_depth(depth_red, depth_green, depth_blue)
+
+    return salinity, current, temperature
 
 
 

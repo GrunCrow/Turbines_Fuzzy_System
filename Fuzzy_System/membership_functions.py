@@ -8,14 +8,14 @@ import skfuzzy as fuzz
 
 #                                                                INPUTS
 #   Salinity       (20, 50)
-salinity['Low'] = fuzz.trapmf(salinity.universe, [20, 20, 26, 33])
-salinity['Medium'] = fuzz.trapmf(salinity.universe, [30, 33, 37, 40])
-salinity['High'] = fuzz.trapmf(salinity.universe, [37, 45, 50, 50])
+salinity['Low'] = fuzz.trapmf(salinity.universe, [0, 0, 26, 33])
+salinity['Medium'] = fuzz.trapmf(salinity.universe, [26, 33, 34, 35])
+salinity['High'] = fuzz.trapmf(salinity.universe, [34, 35, 40, 40])
 
 salinity.view()
 
 #   Temperature     (-20, 50, 0.1).round(1)
-temperature['Very Low'] = fuzz.trapmf(temperature.universe, [-10, -10, -5, 0])
+temperature['Very Low'] = fuzz.trapmf(temperature.universe, [-5, -5, 0, 0])
 temperature['Low'] = fuzz.trimf(temperature.universe, [-5, 7, 15])
 temperature['Medium'] = fuzz.trapmf(temperature.universe, [12, 15, 23, 27])
 temperature['High'] = fuzz.trimf(temperature.universe, [25, 27, 35])

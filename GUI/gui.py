@@ -174,11 +174,15 @@ def clear_all():
 
 def map_action():
     # red, green, blue = image_detector.map()
-    depth_value, temperature_value = color_map.color_map()
+    salinity_value, current_value, temperature_value = color_map.color_map()
 
-    # Change depth value
-    textbox_input_depth.delete(0, 'end')
-    textbox_input_depth.insert("end", str(depth_value))
+    # Change salinity value
+    textbox_input_salinity.delete(0, 'end')
+    textbox_input_salinity.insert("end", str(salinity_value))
+
+    # Change current speed value
+    textbox_input_currents.delete(0, 'end')
+    textbox_input_currents.insert("end", str(current_value))
 
     # Change temperature Value
     textbox_input_temperature.delete(0, 'end')
