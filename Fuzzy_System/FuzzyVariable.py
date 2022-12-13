@@ -9,7 +9,6 @@ Definition of the variables which includes:
 
 domain_salinity = np.arange(0, 40)  # gram per litre
 domain_temperature = np.arange(-5, 35, 0.1).round(1)  # grades celsius
-# 0 - 5 knots -> 0 to 257 cm/s
 domain_currents = np.arange(0, 300)  # cm per second
 domain_viscosity = np.arange(0.3, 2, 0.01)  # centi-poise (mPa)
 domain_density = np.arange(900, 1100)  # Kg/m3
