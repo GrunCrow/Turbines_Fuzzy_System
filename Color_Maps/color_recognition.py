@@ -9,9 +9,9 @@ salinity_b = salinity_g = salinity_r = \
     x_pos = y_pos = 0
 
 # Images from where the colour will be read
-current_map = cv2.imread("Color_Maps/maps/cur_spd_cropped_bw.png")
-salinity_map = cv2.imread("Color_Maps/maps/sal_cropped_bw.png")
-temperature_map = cv2.imread("Color_Maps/maps/sst_cropped_bw.png")
+current_map = cv2.imread("Color_Maps/maps/cur_spd_cropped_bw_50.png")
+salinity_map = cv2.imread("Color_Maps/maps/sal_cropped_bw_50.png")
+temperature_map = cv2.imread("Color_Maps/maps/sst_cropped_bw_50.png")
 
 
 def single_click(event, x, y, flags, param):

@@ -130,7 +130,7 @@ def get_temperature(temperature_red, temperature_green, temperature_blue):
 
 def color_map():
     # file = "Color_Maps/maps/sea_depth.jpg"
-    file = "Color_Maps/maps/sal_cropped.png"
+    file = "Color_Maps/maps/map.png"
 
     salinity_red, salinity_green, salinity_blue,\
     current_red, current_green, current_blue,\
