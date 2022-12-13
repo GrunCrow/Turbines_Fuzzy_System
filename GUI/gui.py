@@ -42,6 +42,12 @@ str_error2 = " must be between "
 str_error3 = " and "
 str_map = "Map"
 
+str_error10 = "Value not found for a parameter"
+str_error11 = "Area selected is not placed in the water, please click on a water area"
+
+result_image = "turbines_results.png"
+result_image_resized = "resized_" + result_image
+
 
 def spanish():
     str_salinity = "Salinidad"
@@ -100,10 +106,10 @@ def calculate():
         result = FuzzySystem.calculate(input_salinity, input_temperature, input_currents,
                                        input_viscosity, input_density, input_depth, input_placement_depth)
 
-        img = Image.open("turbines_results.png")
+        img = Image.open(result_image)
         new_img = img.resize((320, 240))
-        new_img.save("resized_turbines_results.png")
-        image = ImageTk.PhotoImage(Image.open("resized_turbines_results.png"))
+        new_img.save(result_image_resized)
+        image = ImageTk.PhotoImage(Image.open(result_image_resized))
 
         res = tk.Label(frame_results, image=image, padx=20)
         res.pack()
@@ -128,20 +134,37 @@ def open_popup(parameter, minimum_value, maximum_value):
     tk.Label(top, text=error, bg=color_bg_error, font='Nunito 14').place(x=40, y=35)
 
 
+def open_popup_error2(value):
+    top = tk.Toplevel(root)
+    top.config(bg=color_bg_error)
+    top.geometry("600x100")
+    top.resizable(False, False)
+    top.title(str_error_win)
+    # root.eval(f'tk::PlaceWindow {str(top)} center')
+    str_ = ""
+    if value == -1000:
+        str_ = str_error10
+    else:  #-2000
+        str_ = str_error11
+
+    error = str_
+    tk.Label(top, text=error, bg=color_bg_error, font='Nunito 14').place(x=40, y=35)
+
+
 def constraints(input_salinity, input_temperature, input_currents, input_viscosity,
                 input_density, input_depth, input_placement_depth):
-    if not (20 <= float(input_salinity) <= 50):
-        open_popup(str_salinity, 20, 50)
-    elif not (-20 <= float(input_temperature) <= 50):
-        open_popup(str_temperature, -20, 50)
+    if not (0 <= float(input_salinity) <= 40):
+        open_popup(str_salinity, 0, 40)
+    elif not (-5 <= float(input_temperature) <= 40):
+        open_popup(str_temperature, -5, 40)
     elif not (0 <= float(input_currents) <= 300):
         open_popup(str_currents, 0, 300)
-    elif not (0.3 <= float(input_viscosity) <= 2):
-        open_popup(str_viscosity, 0.3, 2)
+    elif not (0 <= float(input_viscosity) <= 2):
+        open_popup(str_viscosity, 0, 2)
     elif not (900 <= float(input_density) <= 1100):
-        open_popup(str_density, 90, 1100)
-    elif not (0 <= float(input_depth) <= 7000):
-        open_popup(str_depth, 0, 7000)
+        open_popup(str_density, 900, 1100)
+    elif not (0 <= float(input_depth) <= 8000):
+        open_popup(str_depth, 0, 8000)
     elif not (0 <= float(input_placement_depth) <= 150):
         open_popup(str_placement_depth, 0, 150)
     else:
@@ -175,6 +198,13 @@ def clear_all():
 def map_action():
     # red, green, blue = image_detector.map()
     salinity_value, current_value, temperature_value = color_map.color_map()
+
+    if salinity_value <= -1000:
+        open_popup_error2(salinity_value)
+    elif current_value <= -1000:
+        open_popup_error2(current_value)
+    elif temperature_value <= -1000:
+        open_popup_error2(temperature_value)
 
     # Change salinity value
     textbox_input_salinity.delete(0, 'end')
