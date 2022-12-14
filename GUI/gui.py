@@ -48,30 +48,11 @@ str_error11 = "Area selected is not placed in the water, please click on a water
 result_image = "turbines_results.png"
 result_image_resized = "resized_" + result_image
 
-
-def spanish():
-    str_salinity = "Salinidad"
-    str_temperature = "Temperatura"
-    str_currents = "Corrientes"
-    str_viscosity = "Viscosidad"
-    str_density = "Densidad"
-    str_depth = "Profundidad"
-    str_placement_depth = "Profundidad de Colocación"
-    str_clear = "Limpiar"
-    str_calculate = "Calcular"
-    str_error_win = "Error en el valor del parametro"
-    str_title = "Calculadora de Turbinas con Lógica Difusa"
-    str_error1 = "Valor del parametro "
-    str_error2 = " debe estar entre "
-    str_error3 = " y "
-    str_map = "Mapa"
-
-
 def load():
     input_salinity = 20
-    input_temperature = -20
+    input_temperature = -5
     input_currents = 0
-    input_viscosity = 0.3
+    input_viscosity = 0
     input_density = 900
     input_depth = 0
     input_placement_depth = 0
@@ -111,7 +92,13 @@ def calculate():
         new_img.save(result_image_resized)
         image = ImageTk.PhotoImage(Image.open(result_image_resized))
 
+        # Image not showing error -> The variable photo is a local variable which
+        #                            gets garbage collected after the class is
+        #                            instantiated. Save a reference to the photo
+        #
+        #                            For some reason I have to declear photo as a global.
         res = tk.Label(frame_results, image=image, padx=20)
+        res.image = image   # keep a reference!
         res.pack()
 
         result = round(result, 3)
@@ -313,7 +300,7 @@ temperature.grid(row=2, column=0, sticky="W", padx=20, pady=10)
 
 textbox_input_temperature = tk.Entry(frame, width=15, bg=color_textbox, fg=color_font, justify='right')
 textbox_input_temperature.grid(row=2, column=1, sticky="e", padx=75)
-textbox_input_temperature.insert("end", "-20")
+textbox_input_temperature.insert("end", "-5")
 
 temperature_unit = tk.Label(frame, text="ºC", fg=color_font, bg=color_bg_subframe)
 temperature_unit['font'] = unit_cfg
