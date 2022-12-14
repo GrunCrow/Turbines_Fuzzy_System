@@ -5,6 +5,8 @@ from PIL import ImageTk, Image
 from Turbines_Fuzzy_System.Fuzzy_System import FuzzySystem
 from Turbines_Fuzzy_System.Color_Maps import color_map
 
+from Turbines_Fuzzy_System.GUI import parameter_calculation
+
 '''
 Color Palette:
 Lighter fonts: #585866
@@ -140,8 +142,8 @@ def open_popup_error2(value):
 
 def constraints(input_salinity, input_temperature, input_currents, input_viscosity,
                 input_density, input_depth, input_placement_depth):
-    if not (0 <= float(input_salinity) <= 40):
-        open_popup(str_salinity, 0, 40)
+    if not (0 <= float(input_salinity) <= 400):
+        open_popup(str_salinity, 0, 400)
     elif not (-5 <= float(input_temperature) <= 40):
         open_popup(str_temperature, -5, 40)
     elif not (0 <= float(input_currents) <= 300):
@@ -186,12 +188,17 @@ def map_action():
     # red, green, blue = image_detector.map()
     salinity_value, current_value, temperature_value = color_map.color_map()
 
+    # given the temperature calculate the density
+    density_value = parameter_calculation.calculate_density(temperature_value)
+
     if salinity_value <= -1000:
         open_popup_error2(salinity_value)
     elif current_value <= -1000:
         open_popup_error2(current_value)
     elif temperature_value <= -1000:
         open_popup_error2(temperature_value)
+    elif density_value <= -1000:
+        open_popup_error2(density_value)
 
     # Change salinity value
     textbox_input_salinity.delete(0, 'end')
@@ -204,6 +211,10 @@ def map_action():
     # Change temperature Value
     textbox_input_temperature.delete(0, 'end')
     textbox_input_temperature.insert("end", str(temperature_value))
+
+    # Change density Value
+    textbox_input_density.delete(0, 'end')
+    textbox_input_density.insert("end", str(density_value))
 
 
 #                                              MAIN WINDOW

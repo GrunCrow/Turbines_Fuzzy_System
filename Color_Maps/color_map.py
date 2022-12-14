@@ -86,6 +86,11 @@ def get_salinity(salinity_red, salinity_green, salinity_blue):
     elif (salinity_red <= 255) & (salinity_green <= 244) & (salinity_blue <= 207):  # 0
         salinity = -1000
 
+    # the scale is nt correct, it shows from 0 to 40 but its from 40 to 0
+    if salinity >= 0:
+        salinity = 40 - salinity
+        salinity = salinity*10
+
     return salinity
 
 # ERRORS:

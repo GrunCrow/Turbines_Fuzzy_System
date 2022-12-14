@@ -7,7 +7,7 @@ Definition of the variables which includes:
     - Declaration of the inputs (Background) and outputs (Consequent) for the skfuzzy library
 '''
 
-domain_salinity = np.arange(0, 40)  # gram per litre
+domain_salinity = np.arange(0, 400)  # gram per litre
 domain_temperature = np.arange(-5, 40, 0.1).round(1)  # grades celsius
 domain_currents = np.arange(0, 300)  # cm per second
 domain_viscosity = np.arange(0, 2, 0.01)  # centi-poise (mPa)
